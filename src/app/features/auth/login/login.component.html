@@ -1,0 +1,55 @@
+<div class="login-page">
+  <div class="login-grid"></div>
+
+  <div class="login-card animate-slide-up">
+
+    <div class="text-center mb-10">
+      <div class="login-logo">LP</div>
+      <h1 class="font-display text-white text-3xl font-light mt-4">Administration</h1>
+      <p class="text-white/30 text-sm mt-2 tracking-wider">Lens & Pixel</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+
+      <div>
+        <label class="label-field">Identifiant</label>
+        <input formControlName="username" type="text" placeholder="admin"
+               class="input-field" autocomplete="username">
+      </div>
+
+      <div>
+        <label class="label-field">Mot de passe</label>
+        <input formControlName="password"
+               [type]="showPassword() ? 'text' : 'password'"
+               placeholder="••••••••"
+               class="input-field" autocomplete="current-password">
+        <button type="button" (click)="showPassword.set(!showPassword())" class="toggle-password">
+          {{ showPassword() ? 'Masquer' : 'Afficher' }} le mot de passe
+        </button>
+      </div>
+
+      @if (error()) {
+        <div class="login-error">{{ error() }}</div>
+      }
+
+      <button type="submit" [disabled]="loading()"
+              class="btn-primary w-full justify-center py-3.5 mt-6 disabled:opacity-50">
+        @if (loading()) {
+          <span class="spinner-login"></span>
+          Connexion...
+        } @else {
+          Se connecter
+        }
+      </button>
+    </form>
+
+    <div class="mt-8 text-center">
+      <a routerLink="/" class="back-link">← Retour au site</a>
+    </div>
+
+    <div class="default-creds">
+      <p>Compte par défaut : <span class="text-white/40">admin / Admin&#64;2025</span></p>
+      <p class="text-white/15 text-[10px] mt-1">Changez ce mot de passe en production !</p>
+    </div>
+  </div>
+</div>

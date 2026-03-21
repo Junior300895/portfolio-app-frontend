@@ -1,0 +1,211 @@
+<div class="dashboard">
+
+  <!-- Welcome banner -->
+  <div class="welcome-banner">
+    <div>
+      <h1 class="welcome-title">Bonjour, {{ username() }} 👋</h1>
+      <p class="welcome-sub">Gérez votre portfolio depuis ce tableau de bord.</p>
+    </div>
+    <a routerLink="/admin/evenements/nouveau" class="btn-primary px-6 py-2.5 text-sm">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+      Nouvel événement
+    </a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon events">📷</div>
+      <div>
+        <div class="stat-label">Événements</div>
+        <div class="stat-value">{{ stats().totalEvents }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon photos">🖼️</div>
+      <div>
+        <div class="stat-label">Photos publiées</div>
+        <div class="stat-value">{{ stats().totalPhotos }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon videos">🎬</div>
+      <div>
+        <div class="stat-label">Vidéos publiées</div>
+        <div class="stat-value">{{ stats().totalVideos }}</div>
+      </div>
+    </div>
+    <div class="stat-card" [class.stat-alert]="stats().unreadMessages > 0">
+      <div class="stat-icon messages">✉️</div>
+      <div>
+        <div class="stat-label">Messages non lus</div>
+        <div class="stat-value" [class.text-red-400]="stats().unreadMessages > 0">
+          {{ stats().unreadMessages }}
+        </div>
+      </div>
+      @if (stats().unreadMessages > 0) {
+        <a routerLink="/admin/messages" class="stat-alert-link">Voir →</a>
+      }
+    </div>
+  </div>
+
+  <!-- Quick actions -->
+  <div class="section-block">
+    <h2 class="section-heading">Actions rapides</h2>
+    <div class="quick-actions-grid">
+
+      <a routerLink="/admin/evenements/nouveau" class="quick-action">
+        <div class="qa-icon amber">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+        </div>
+        <div>
+          <div class="qa-title">Créer un événement</div>
+          <div class="qa-desc">Ajoutez un nouvel événement à votre portfolio</div>
+        </div>
+        <svg class="qa-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+
+      <a routerLink="/admin/evenements" class="quick-action">
+        <div class="qa-icon blue">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+          </svg>
+        </div>
+        <div>
+          <div class="qa-title">Gérer les événements</div>
+          <div class="qa-desc">Modifier, supprimer, uploader des médias</div>
+        </div>
+        <svg class="qa-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+
+      <a routerLink="/admin/messages" class="quick-action">
+        <div class="qa-icon" [class.green]="stats().unreadMessages === 0"
+             [class.red]="stats().unreadMessages > 0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="qa-title">Messages clients
+            @if (stats().unreadMessages > 0) {
+              <span class="unread-badge">{{ stats().unreadMessages }} non lu(s)</span>
+            }
+          </div>
+          <div class="qa-desc">Consultez et répondez aux demandes</div>
+        </div>
+        <svg class="qa-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+
+      <a routerLink="/" target="_blank" class="quick-action">
+        <div class="qa-icon purple">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+        </div>
+        <div>
+          <div class="qa-title">Voir le site public</div>
+          <div class="qa-desc">Prévisualiser votre portfolio en ligne</div>
+        </div>
+        <svg class="qa-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- Bottom grid -->
+  <div class="bottom-grid">
+
+    <!-- Recent events -->
+    <div class="section-block">
+      <div class="section-header">
+        <h2 class="section-heading">Derniers événements</h2>
+        <a routerLink="/admin/evenements" class="section-link">Voir tout →</a>
+      </div>
+      <div class="events-list">
+        @for (event of recentEvents(); track event.id) {
+          <div class="event-row">
+            <div class="event-thumb">
+              @if (event.coverPhoto) {
+                <img [src]="event.coverPhoto" [alt]="event.title" loading="lazy">
+              } @else {
+                <span>📷</span>
+              }
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="text-white text-sm font-medium truncate">{{ event.title }}</div>
+              <div class="text-white/30 text-xs mt-0.5">
+                {{ event.photoCount }} photo(s) · {{ formatDate(event.eventDate) }}
+              </div>
+            </div>
+            <div class="event-actions">
+              <a [routerLink]="['/admin/evenements', event.id, 'medias']"
+                 class="event-action-btn" title="Gérer les médias">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                </svg>
+              </a>
+              <a [routerLink]="['/admin/evenements', event.id, 'modifier']"
+                 class="event-action-btn" title="Modifier">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        } @empty {
+          <div class="empty-state">
+            <p>Aucun événement pour l'instant</p>
+            <a routerLink="/admin/evenements/nouveau" class="btn-primary text-xs px-4 py-2 mt-3 inline-flex">
+              Créer le premier
+            </a>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Recent messages -->
+    <div class="section-block">
+      <div class="section-header">
+        <h2 class="section-heading">Derniers messages</h2>
+        <a routerLink="/admin/messages" class="section-link">Voir tout →</a>
+      </div>
+      <div class="messages-list">
+        @for (msg of recentMessages(); track msg.id) {
+          <a [routerLink]="['/admin/messages']" class="msg-row" [class.msg-unread]="!msg.read">
+            <div class="msg-dot" [class.visible]="!msg.read"></div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="text-white text-sm font-medium">{{ msg.name }}</span>
+                @if (msg.eventType) {
+                  <span class="msg-type">{{ msg.eventType }}</span>
+                }
+              </div>
+              <p class="text-white/40 text-xs mt-0.5 truncate">{{ msg.message }}</p>
+            </div>
+            <span class="text-white/20 text-xs shrink-0">{{ formatDateTime(msg.sentAt) }}</span>
+          </a>
+        } @empty {
+          <div class="empty-state">Aucun message reçu</div>
+        }
+      </div>
+    </div>
+
+  </div>
+</div>

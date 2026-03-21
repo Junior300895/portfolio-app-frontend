@@ -1,0 +1,70 @@
+<nav [class]="navClass()">
+  <div class="max-w-7xl mx-auto px-6 flex items-center justify-between h-18">
+
+    <!-- Logo -->
+    <a routerLink="/" class="flex items-center gap-3 group">
+      <div class="logo-circle">LP</div>
+      <span class="brand-name">Lens & Pixel</span>
+    </a>
+
+    <!-- Desktop nav -->
+    <div class="hidden md:flex items-center gap-8">
+      <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:true}" class="nav-link">Accueil</a>
+      <a routerLink="/evenements" routerLinkActive="active-link" class="nav-link">Événements</a>
+      <a routerLink="/galerie" routerLinkActive="active-link" class="nav-link">Galerie</a>
+      <a routerLink="/contact" class="nav-cta">Contact</a>
+
+      @if (auth.isAuthenticated()) {
+        <a routerLink="/admin" class="nav-link admin-link">Admin</a>
+        <button (click)="auth.logout()" class="nav-logout" title="Se déconnecter">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+        </button>
+      } @else {
+        <a routerLink="/admin/login" class="nav-login">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+          </svg>
+          Connexion
+        </a>
+      }
+    </div>
+
+    <!-- Mobile toggle -->
+    <button (click)="menuOpen.set(!menuOpen())" class="md:hidden text-white p-2">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        @if (!menuOpen()) {
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+        } @else {
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+        }
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  @if (menuOpen()) {
+    <div class="mobile-menu md:hidden">
+      <a routerLink="/" (click)="menuOpen.set(false)" class="nav-link-mobile">Accueil</a>
+      <a routerLink="/evenements" (click)="menuOpen.set(false)" class="nav-link-mobile">Événements</a>
+      <a routerLink="/galerie" (click)="menuOpen.set(false)" class="nav-link-mobile">Galerie</a>
+      <a routerLink="/contact" (click)="menuOpen.set(false)" class="nav-link-mobile amber">Contact</a>
+
+      @if (auth.isAuthenticated()) {
+        <a routerLink="/admin" (click)="menuOpen.set(false)" class="nav-link-mobile">
+          🛠 Administration
+        </a>
+        <button (click)="auth.logout(); menuOpen.set(false)" class="nav-link-mobile logout-mobile">
+          Se déconnecter
+        </button>
+      } @else {
+        <a routerLink="/admin/login" (click)="menuOpen.set(false)" class="nav-link-mobile amber">
+          🔑 Connexion admin
+        </a>
+      }
+    </div>
+  }
+</nav>

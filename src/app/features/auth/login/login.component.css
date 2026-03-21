@@ -1,0 +1,48 @@
+.login-page {
+  min-height: 100vh; background: black;
+  display: flex; align-items: center; justify-content: center; padding: 1.5rem;
+  position: relative;
+}
+.login-grid {
+  position: absolute; inset: 0; opacity: 0.03;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.login-card {
+  position: relative; z-index: 10;
+  width: 100%; max-width: 24rem;
+}
+.login-logo {
+  width: 3.5rem; height: 3.5rem; border-radius: 50%;
+  background: #fbbf24;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: black; font-size: 1.25rem; letter-spacing: 0.1em;
+  margin: 0 auto;
+}
+.toggle-password {
+  color: rgba(255,255,255,0.3); font-size: 0.75rem; margin-top: 0.25rem;
+  background: none; border: none; cursor: pointer; transition: color 0.2s;
+}
+.toggle-password:hover { color: rgba(255,255,255,0.6); }
+.login-error {
+  padding: 0.75rem; background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.3); color: #f87171; font-size: 0.875rem;
+}
+.spinner-login {
+  display: inline-block; width: 1rem; height: 1rem;
+  border: 2px solid black; border-top-color: transparent;
+  border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 0.5rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.back-link {
+  color: rgba(255,255,255,0.2); font-size: 0.7rem;
+  letter-spacing: 0.15em; text-transform: uppercase; text-decoration: none; transition: color 0.2s;
+}
+.back-link:hover { color: rgba(255,255,255,0.4); }
+.default-creds {
+  margin-top: 1.5rem; padding: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.05);
+  text-align: center; color: rgba(255,255,255,0.2); font-size: 0.75rem;
+}

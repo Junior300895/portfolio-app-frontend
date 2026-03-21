@@ -1,0 +1,100 @@
+<div class="page-enter pt-24 bg-black min-h-screen">
+
+      <!-- Header -->
+      <section class="py-16 px-6 border-b border-white/5">
+        <div class="max-w-7xl mx-auto">
+          <div class="section-subtitle mb-3">Sélection</div>
+          <h1 class="section-title text-white">
+            Galerie <em class="text-amber-400 not-italic">best-of</em>
+          </h1>
+          <p class="mt-4 text-white/40 max-w-lg font-light">
+            Une sélection des meilleures photos issues de l'ensemble de mes reportages.
+          </p>
+        </div>
+      </section>
+
+      <!-- Gallery grid -->
+      <section class="py-12 px-6">
+        <div class="max-w-7xl mx-auto">
+
+          @if (loading()) {
+            <div class="columns-2 md:columns-3 lg:columns-4 gap-3 space-y-3">
+              @for (i of [1,2,3,4,5,6,7,8]; track i) {
+                <div class="skeleton break-inside-avoid mb-3" [style.height.px]="150 + (i % 3) * 80"></div>
+              }
+            </div>
+          } @else if (photos().length === 0) {
+            <div class="text-center py-32 text-white/30">
+              <div class="text-5xl mb-4">🖼️</div>
+              <p class="font-display text-2xl">La galerie est vide pour l'instant</p>
+              <p class="text-sm mt-2">Les meilleures photos apparaîtront ici.</p>
+            </div>
+          } @else {
+            <!-- Masonry columns -->
+            <div class="columns-2 md:columns-3 lg:columns-4 gap-3">
+              @for (photo of photos(); track photo.id; let i = $index) {
+                <div
+                  class="break-inside-avoid mb-3 overflow-hidden group cursor-pointer relative bg-zinc-900"
+                  (click)="openLightbox(i)">
+                  <img
+                    [src]="photo.thumbnailPath || photo.filePath"
+                    [alt]="photo.caption || 'Photo'"
+                    class="w-full object-cover transition-transform duration-500 group-hover:scale-105 block"
+                    loading="lazy">
+                  <!-- Hover overlay -->
+                  <div class="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all duration-300 flex items-end justify-start p-3">
+                    @if (photo.caption) {
+                      <span class="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300 line-clamp-2">
+                        {{ photo.caption }}
+                      </span>
+                    }
+                  </div>
+                  <!-- Best-of star -->
+                  <div class="absolute top-2 right-2 text-amber-400 opacity-70 text-sm">★</div>
+                </div>
+              }
+            </div>
+
+            <p class="text-center text-white/20 text-sm mt-8">
+              {{ photos().length }} photos sélectionnées
+            </p>
+          }
+        </div>
+      </section>
+
+      <!-- Lightbox -->
+      @if (lightboxOpen()) {
+        <div class="lightbox-overlay" (click)="closeLightbox()">
+          <div class="relative max-w-5xl w-full mx-auto px-12" (click)="$event.stopPropagation()">
+
+            <button (click)="prev()" class="absolute left-0 top-1/2 -translate-y-1/2 text-white/60 hover:text-amber-400 transition-colors p-2">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
+              </svg>
+            </button>
+            <button (click)="next()" class="absolute right-0 top-1/2 -translate-y-1/2 text-white/60 hover:text-amber-400 transition-colors p-2">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+            <button (click)="closeLightbox()" class="absolute top-0 right-0 -translate-y-10 text-white/60 hover:text-white p-1">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
+
+            <img
+              [src]="photos()[lightboxIndex()].filePath"
+              [alt]="photos()[lightboxIndex()].caption || ''"
+              class="max-h-[80vh] w-full object-contain">
+
+            <div class="text-center mt-3">
+              @if (photos()[lightboxIndex()].caption) {
+                <p class="text-white/60 text-sm">{{ photos()[lightboxIndex()].caption }}</p>
+              }
+              <span class="text-white/30 text-xs">{{ lightboxIndex() + 1 }} / {{ photos().length }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>

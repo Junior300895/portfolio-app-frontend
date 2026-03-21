@@ -1,0 +1,145 @@
+<div class="page-enter">
+
+  <!-- HERO -->
+  <section class="hero-section">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+      <div class="section-subtitle mb-6 animate-fade-in">Photographe Freelance · Paris</div>
+      <h1 class="hero-title animate-slide-up">
+        Capturer<br>
+        <em class="text-amber-400 not-italic">l'instant</em><br>
+        parfait
+      </h1>
+      <p class="hero-subtitle animate-slide-up">
+        Mariages · Conférences · Concerts · Anniversaires<br>
+        Chaque événement mérite d'être immortalisé.
+      </p>
+      <div class="hero-actions animate-slide-up">
+        <a routerLink="/evenements" class="btn-primary">
+          Voir les événements
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+        <a routerLink="/contact" class="btn-outline">Demander un devis</a>
+      </div>
+    </div>
+    <div class="scroll-indicator animate-bounce">
+      <span class="text-[10px] tracking-[0.3em] uppercase">Scroll</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-section">
+    <div class="max-w-5xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div><div class="stat-number">5+</div><div class="stat-label">Années d'exp.</div></div>
+      <div><div class="stat-number">300+</div><div class="stat-label">Événements</div></div>
+      <div><div class="stat-number">15k+</div><div class="stat-label">Photos livrées</div></div>
+      <div><div class="stat-number">98%</div><div class="stat-label">Clients satisfaits</div></div>
+    </div>
+  </section>
+
+  <!-- FEATURED EVENTS -->
+  <section class="py-24 px-6 bg-black">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-16">
+        <div>
+          <div class="section-subtitle mb-3">Portfolio</div>
+          <h2 class="section-title text-white">Événements<br><em class="text-white/40 not-italic">récents</em></h2>
+        </div>
+        <a routerLink="/evenements" class="mt-6 md:mt-0 btn-ghost text-sm">
+          Tous les événements
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+      </div>
+
+      @if (loading()) {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          @for (i of [1,2,3]; track i) {
+            <div class="skeleton h-80"></div>
+          }
+        </div>
+      } @else {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          @for (event of featured(); track event.id) {
+            <a [routerLink]="['/evenements', event.id]" class="card-event block group">
+              <div class="relative overflow-hidden h-64 bg-zinc-900">
+                @if (event.coverPhoto) {
+                  <img [src]="event.coverPhoto" [alt]="event.title"
+                       class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                       loading="lazy">
+                } @else {
+                  <div class="w-full h-full flex items-center justify-center text-6xl opacity-20">
+                    {{ getCategoryIcon(event.category) }}
+                  </div>
+                }
+                <div class="absolute top-4 left-4">
+                  <span class="category-badge">{{ getCategoryLabel(event.category) }}</span>
+                </div>
+                <div class="card-hover-overlay">
+                  <span class="card-hover-label">Voir l'événement</span>
+                </div>
+              </div>
+              <div class="p-6 border-t border-white/5">
+                <h3 class="font-display text-white text-xl font-light mb-2 group-hover:text-amber-400 transition-colors">
+                  {{ event.title }}
+                </h3>
+                <div class="flex items-center gap-4 text-white/40 text-xs">
+                  <span>{{ formatDate(event.eventDate) }}</span>
+                  <span>{{ event.photoCount }} photos</span>
+                  @if (event.videoCount > 0) {
+                    <span>{{ event.videoCount }} vidéos</span>
+                  }
+                </div>
+                @if (event.location) {
+                  <p class="mt-2 text-white/30 text-xs truncate">📍 {{ event.location }}</p>
+                }
+              </div>
+            </a>
+          }
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="py-24 px-6 bg-zinc-950">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16">
+        <div class="section-subtitle mb-3">Services</div>
+        <h2 class="section-title text-white">Ce que je <em class="text-amber-400 not-italic">propose</em></h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        @for (service of services; track service.icon) {
+          <div class="service-card group">
+            <div class="text-4xl mb-6">{{ service.icon }}</div>
+            <h3 class="font-display text-white text-xl mb-3 group-hover:text-amber-400 transition-colors">{{ service.title }}</h3>
+            <p class="text-white/40 text-sm leading-relaxed">{{ service.desc }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 px-6 bg-black relative overflow-hidden">
+    <div class="cta-glow"></div>
+    <div class="relative max-w-3xl mx-auto text-center">
+      <div class="section-subtitle mb-4">Travaillons ensemble</div>
+      <h2 class="section-title text-white mb-6">
+        Votre prochain événement<br>mérite les <em class="text-amber-400 not-italic">meilleures photos</em>
+      </h2>
+      <p class="text-white/40 text-base mb-10 font-light">
+        Contactez-moi pour discuter de votre projet et recevoir un devis personnalisé sous 24h.
+      </p>
+      <a routerLink="/contact" class="btn-primary text-base px-10 py-4">Prendre contact</a>
+    </div>
+  </section>
+
+</div>

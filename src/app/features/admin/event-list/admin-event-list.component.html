@@ -1,0 +1,133 @@
+<div>
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-white text-2xl font-semibold mb-1">Événements</h1>
+          <p class="text-white/40 text-sm">{{ totalElements() }} événements au total</p>
+        </div>
+        <a routerLink="/admin/evenements/nouveau" class="btn-primary text-xs px-5 py-2.5">
+          + Nouvel événement
+        </a>
+      </div>
+
+      @if (loading()) {
+        <div class="space-y-3">
+          @for (i of [1,2,3,4,5]; track i) {
+            <div class="skeleton h-16"></div>
+          }
+        </div>
+      } @else if (events().length === 0) {
+        <div class="text-center py-24 text-white/30">
+          <div class="text-4xl mb-3">📷</div>
+          <p>Aucun événement créé</p>
+          <a routerLink="/admin/evenements/nouveau" class="btn-outline mt-4 inline-flex">
+            Créer le premier événement
+          </a>
+        </div>
+      } @else {
+        <div class="bg-zinc-900 border border-white/5 overflow-hidden">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-white/5">
+                <th class="text-left px-4 py-3 text-white/30 text-xs tracking-widest uppercase font-medium">Événement</th>
+                <th class="text-left px-4 py-3 text-white/30 text-xs tracking-widest uppercase font-medium hidden md:table-cell">Catégorie</th>
+                <th class="text-left px-4 py-3 text-white/30 text-xs tracking-widest uppercase font-medium hidden lg:table-cell">Date</th>
+                <th class="text-left px-4 py-3 text-white/30 text-xs tracking-widest uppercase font-medium hidden lg:table-cell">Médias</th>
+                <th class="text-left px-4 py-3 text-white/30 text-xs tracking-widest uppercase font-medium">À la une</th>
+                <th class="text-right px-4 py-3 text-white/30 text-xs tracking-widest uppercase font-medium">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/5">
+              @for (event of events(); track event.id) {
+                <tr class="hover:bg-white/[0.02] transition-colors">
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="w-9 h-9 bg-zinc-800 shrink-0 overflow-hidden">
+                        @if (event.coverPhoto) {
+                          <img [src]="event.coverPhoto" class="w-full h-full object-cover" loading="lazy">
+                        } @else {
+                          <div class="w-full h-full flex items-center justify-center text-white/20 text-xs">📷</div>
+                        }
+                      </div>
+                      <span class="text-white text-sm font-medium line-clamp-1">{{ event.title }}</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 hidden md:table-cell">
+                    <span class="text-white/50 text-xs tracking-wider">{{ getCategoryLabel(event.category) }}</span>
+                  </td>
+                  <td class="px-4 py-3 text-white/40 text-xs hidden lg:table-cell">
+                    {{ formatDate(event.eventDate) }}
+                  </td>
+                  <td class="px-4 py-3 hidden lg:table-cell">
+                    <span class="text-white/40 text-xs">{{ event.photoCount }}p · {{ event.videoCount }}v</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    @if (event.featured) {
+                      <span class="text-amber-400 text-xs">★ Oui</span>
+                    } @else {
+                      <span class="text-white/20 text-xs">—</span>
+                    }
+                  </td>
+                  <td class="px-4 py-3">
+                    <div class="flex items-center justify-end gap-2">
+                      <a [routerLink]="['/admin/evenements', event.id, 'medias']"
+                         title="Gérer les médias"
+                         class="action-btn text-blue-400/60 hover:text-blue-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                        </svg>
+                      </a>
+                      <a [routerLink]="['/admin/evenements', event.id, 'modifier']"
+                         title="Modifier"
+                         class="action-btn text-amber-400/60 hover:text-amber-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                      </a>
+                      <button (click)="confirmDelete(event)"
+                              title="Supprimer"
+                              class="action-btn text-red-400/50 hover:text-red-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages() > 1) {
+          <div class="flex items-center justify-between mt-4">
+            <span class="text-white/30 text-xs">Page {{ currentPage() + 1 }} / {{ totalPages() }}</span>
+            <div class="flex gap-2">
+              <button (click)="load(currentPage() - 1)" [disabled]="currentPage() === 0"
+                      class="btn-ghost text-xs px-3 py-1.5 disabled:opacity-30">← Préc.</button>
+              <button (click)="load(currentPage() + 1)" [disabled]="currentPage() === totalPages() - 1"
+                      class="btn-ghost text-xs px-3 py-1.5 disabled:opacity-30">Suiv. →</button>
+            </div>
+          </div>
+        }
+      }
+
+      <!-- Delete confirm dialog -->
+      @if (deleteTarget()) {
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-6">
+          <div class="bg-zinc-900 border border-white/10 p-8 max-w-md w-full">
+            <h3 class="text-white text-lg font-semibold mb-3">Supprimer l'événement ?</h3>
+            <p class="text-white/50 text-sm mb-6">
+              "<strong class="text-white">{{ deleteTarget()!.title }}</strong>" et tous ses médias seront supprimés définitivement.
+            </p>
+            <div class="flex gap-3 justify-end">
+              <button (click)="deleteTarget.set(null)" class="btn-ghost text-sm px-5 py-2">Annuler</button>
+              <button (click)="doDelete()" [disabled]="deleting()"
+                      class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white text-sm transition-colors disabled:opacity-50">
+                {{ deleting() ? 'Suppression...' : 'Supprimer' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>

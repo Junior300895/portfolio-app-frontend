@@ -1,0 +1,60 @@
+.footer {
+  background: black;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.6);
+}
+
+.footer-logo {
+  width: 2rem; height: 2rem;
+  border-radius: 50%;
+  background: #fbbf24;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; color: black;
+  font-size: 0.7rem; letter-spacing: 0.1em;
+}
+
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  color: white;
+  text-transform: uppercase;
+}
+
+.footer-heading {
+  color: white;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+}
+
+.footer-link {
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-link:hover { color: #f59e0b; }
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .footer-bottom { flex-direction: row; }
+}
+
+.admin-link {
+  color: rgba(255,255,255,0.15);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.admin-link:hover { color: rgba(255,255,255,0.4); }

@@ -1,0 +1,139 @@
+<div class="page-enter pt-24 bg-black min-h-screen">
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+
+      <!-- Left: Info -->
+      <div>
+        <div class="section-subtitle mb-3">Contactez-moi</div>
+        <h1 class="section-title text-white mb-6">
+          Parlons de<br><em class="text-amber-400 not-italic">votre projet</em>
+        </h1>
+        <p class="text-white/50 text-base leading-relaxed mb-12 font-light">
+          Vous avez un événement à venir et cherchez un photographe professionnel ?
+          Décrivez-moi votre projet et je vous répondrai sous 24h avec un devis personnalisé.
+        </p>
+
+        <div class="space-y-6">
+          <div class="contact-item">
+            <div class="contact-icon">✉</div>
+            <div>
+              <div class="contact-label">Email</div>
+              <div class="text-white">contact&#64;lensandpixel.fr</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">☎</div>
+            <div>
+              <div class="contact-label">Téléphone</div>
+              <div class="text-white">+33 6 12 34 56 78</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div>
+              <div class="contact-label">Zone d'intervention</div>
+              <div class="text-white">Paris & Île-de-France</div>
+              <div class="text-white/40 text-sm">Déplacements France entière sur demande</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="availability-badge">
+          <div class="flex items-center gap-3 mb-2">
+            <div class="pulse-dot"></div>
+            <span class="text-amber-400 text-xs tracking-widest uppercase font-medium">Disponible</span>
+          </div>
+          <p class="text-white/50 text-sm">Réponse garantie sous 24 heures ouvrées.</p>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div>
+        @if (success()) {
+          <div class="text-center py-20">
+            <div class="text-6xl mb-6">✅</div>
+            <h3 class="font-display text-white text-3xl mb-4">Message envoyé !</h3>
+            <p class="text-white/50 mb-8">Je vous répondrai dans les plus brefs délais.</p>
+            <button (click)="success.set(false)" class="btn-outline">Envoyer un autre message</button>
+          </div>
+        } @else {
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label class="label-field">Nom complet *</label>
+                <input formControlName="name" type="text" placeholder="Sophie Martin"
+                       class="input-field" [class.input-error]="isInvalid('name')">
+                @if (isInvalid('name')) {
+                  <p class="field-error">Votre nom est requis</p>
+                }
+              </div>
+              <div>
+                <label class="label-field">Email *</label>
+                <input formControlName="email" type="email" placeholder="sophie@example.com"
+                       class="input-field" [class.input-error]="isInvalid('email')">
+                @if (isInvalid('email')) {
+                  <p class="field-error">Email invalide</p>
+                }
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <label class="label-field">Téléphone</label>
+                <input formControlName="phone" type="tel" placeholder="+33 6 12 34 56 78" class="input-field">
+              </div>
+              <div>
+                <label class="label-field">Type d'événement</label>
+                <select formControlName="eventType" class="input-field select-dark">
+                  <option value="">Sélectionner...</option>
+                  <option value="MARIAGE">Mariage</option>
+                  <option value="ANNIVERSAIRE">Anniversaire</option>
+                  <option value="CONFERENCE">Conférence</option>
+                  <option value="SEMINAIRE">Séminaire</option>
+                  <option value="CONCERT">Concert / Festival</option>
+                  <option value="CORPORATE">Corporate</option>
+                  <option value="AUTRE">Autre</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="label-field">Date souhaitée</label>
+              <input formControlName="eventDateRequested" type="date"
+                     class="input-field date-dark">
+            </div>
+
+            <div>
+              <label class="label-field">Message *</label>
+              <textarea formControlName="message" rows="6"
+                        placeholder="Décrivez votre événement : lieu, nombre d'invités, vos attentes..."
+                        class="input-field resize-none"
+                        [class.input-error]="isInvalid('message')"></textarea>
+              @if (isInvalid('message')) {
+                <p class="field-error">Message trop court (min. 10 caractères)</p>
+              }
+            </div>
+
+            @if (error()) {
+              <div class="error-banner">{{ error() }}</div>
+            }
+
+            <button type="submit" [disabled]="submitting()"
+                    class="btn-primary w-full justify-center py-4 disabled:opacity-50 disabled:cursor-not-allowed">
+              @if (submitting()) {
+                <span class="spinner-sm"></span>
+                Envoi en cours...
+              } @else {
+                Envoyer le message
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                </svg>
+              }
+            </button>
+          </form>
+        }
+      </div>
+    </div>
+  </div>
+</div>

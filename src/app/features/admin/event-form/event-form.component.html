@@ -1,0 +1,105 @@
+<div class="max-w-2xl">
+  <div class="flex items-center gap-4 mb-8">
+    <a routerLink="/admin/evenements" class="back-btn">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+    </a>
+    <div>
+      <h1 class="text-white text-2xl font-semibold">
+        {{ isEdit() ? "Modifier l'événement" : 'Nouvel événement' }}
+      </h1>
+      <p class="text-white/40 text-sm mt-0.5">
+        {{ isEdit() ? "Modifiez les informations de l'événement" : 'Créez un nouvel événement à votre portfolio' }}
+      </p>
+    </div>
+  </div>
+
+  @if (pageLoading()) {
+    <div class="flex items-center justify-center py-24">
+      <div class="spinner-form"></div>
+    </div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+
+      <div class="form-section">
+        <h3 class="form-section-title">Informations générales</h3>
+
+        <div>
+          <label class="label-field">Titre *</label>
+          <input formControlName="title" type="text"
+                 placeholder="Ex : Mariage Sophie & Alexandre"
+                 class="input-field" [class.input-error]="isInvalid('title')">
+          @if (isInvalid('title')) {
+            <p class="field-error">Le titre est requis</p>
+          }
+        </div>
+
+        <div>
+          <label class="label-field">Description</label>
+          <textarea formControlName="description" rows="4"
+                    placeholder="Décrivez cet événement : ambiance, lieu, moments forts..."
+                    class="input-field resize-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label class="label-field">Catégorie</label>
+            <select formControlName="category" class="input-field select-dark">
+              <option value="">Sélectionner...</option>
+              <option value="MARIAGE">💍 Mariage</option>
+              <option value="ANNIVERSAIRE">🎂 Anniversaire</option>
+              <option value="CONFERENCE">🎤 Conférence</option>
+              <option value="SEMINAIRE">📋 Séminaire</option>
+              <option value="CONCERT">🎵 Concert</option>
+              <option value="CORPORATE">🏢 Corporate</option>
+              <option value="FAMILLE">👨‍👩‍👧 Famille</option>
+              <option value="AUTRE">📷 Autre</option>
+            </select>
+          </div>
+          <div>
+            <label class="label-field">Date de l'événement</label>
+            <input formControlName="eventDate" type="date" class="input-field date-dark">
+          </div>
+        </div>
+
+        <div>
+          <label class="label-field">Lieu</label>
+          <input formControlName="location" type="text"
+                 placeholder="Ex : Château de Vaux-le-Vicomte, Maincy"
+                 class="input-field">
+        </div>
+
+        <div class="flex items-center gap-3">
+          <input formControlName="featured" type="checkbox" id="featured" class="w-4 h-4 accent-amber-400">
+          <label for="featured" class="text-white/60 text-sm cursor-pointer">
+            Mettre à la une (affiché sur la page d'accueil)
+          </label>
+        </div>
+      </div>
+
+      @if (error()) {
+        <div class="form-error">{{ error() }}</div>
+      }
+
+      <div class="flex items-center gap-4">
+        <button type="submit" [disabled]="saving()"
+                class="btn-primary px-8 py-3 disabled:opacity-50">
+          @if (saving()) {
+            <span class="spinner-btn"></span>
+            Enregistrement...
+          } @else {
+            {{ isEdit() ? 'Enregistrer les modifications' : "Créer l'événement" }}
+          }
+        </button>
+        <a routerLink="/admin/evenements" class="btn-ghost px-6 py-3 text-sm">Annuler</a>
+      </div>
+
+      @if (!isEdit()) {
+        <p class="text-white/20 text-xs">
+          💡 Après la création, vous pourrez uploader des photos et vidéos depuis la liste des événements.
+        </p>
+      }
+    </form>
+  }
+</div>
