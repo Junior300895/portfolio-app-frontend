@@ -74,7 +74,7 @@ export class MessagesComponent implements OnInit {
     lines.push('Êtes-vous disponible pour qu\'on en discute ? 🎯');
     lines.push('');
     lines.push('Cordialement,');
-    lines.push('*Lens & Pixel*');
+    lines.push('*TIPEU PHOTOGRAPHY*');
     const text = encodeURIComponent(lines.join('\n'));
     window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
   }
