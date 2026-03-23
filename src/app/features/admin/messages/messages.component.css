@@ -57,8 +57,35 @@
   margin-bottom: 0.125rem;
 }
 
-.truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.btn-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #25D366;
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+}
+.btn-whatsapp:hover { background: #1ebe5d; }
+
+.wa-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex-shrink: 0;
+}
+
+.no-phone-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(255,255,255,0.2);
+  font-size: 0.72rem;
+  font-style: italic;
+}
+.no-phone-icon {
+  width: 0.8rem;
+  height: 0.8rem;
 }
