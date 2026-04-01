@@ -1,0 +1,184 @@
+<!-- ── En-tête ── -->
+<div class="pg-admin-header">
+  <div>
+    <h1 class="pg-admin-title">Galeries privées</h1>
+    <p class="pg-admin-sub">Créez des galeries personnalisées pour partager les photos avec vos clients.</p>
+  </div>
+  <button class="pg-create-btn" (click)="openForm()">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+    </svg>
+    Nouvelle galerie
+  </button>
+</div>
+
+<!-- ── Modal de création ── -->
+@if (showForm()) {
+  <div class="pg-modal-backdrop" (click)="showForm.set(false)">
+    <div class="pg-modal" (click)="$event.stopPropagation()">
+      <div class="pg-modal-header">
+        <h2 class="pg-modal-title">Créer une galerie privée</h2>
+        <button class="pg-modal-close" (click)="showForm.set(false)">✕</button>
+      </div>
+
+      <div class="pg-modal-body">
+
+        <!-- Événement -->
+        <div class="pg-field">
+          <label class="pg-label">Événement *</label>
+          <select [(ngModel)]="form.eventId" class="pg-select">
+            <option [value]="null">— Choisir un événement —</option>
+            @for (event of events(); track event.id) {
+              <option [value]="event.id">{{ event.title }} ({{ event.eventDate | date:'dd/MM/yyyy' }})</option>
+            }
+          </select>
+        </div>
+
+        <!-- Nom client -->
+        <div class="pg-field">
+          <label class="pg-label">Nom du client *</label>
+          <input type="text" [(ngModel)]="form.clientName" placeholder="Ex : Famille Diallo" class="pg-input" />
+        </div>
+
+        <!-- Email client -->
+        <div class="pg-field">
+          <label class="pg-label">Email du client <span class="pg-optional">(optionnel)</span></label>
+          <input type="email" [(ngModel)]="form.clientEmail" placeholder="client@email.com" class="pg-input" />
+        </div>
+
+        <!-- Mot de passe -->
+        <div class="pg-field">
+          <label class="pg-label">Mot de passe <span class="pg-optional">(laisser vide = lien seul)</span></label>
+          <input type="text" [(ngModel)]="form.password" placeholder="Ex : tipeu2025" class="pg-input" />
+        </div>
+
+        <!-- Expiration -->
+        <div class="pg-field">
+          <label class="pg-label">Expiration</label>
+          <div class="pg-expiry-options">
+            @for (opt of [7, 14, 30, 60, 90]; track opt) {
+              <button
+                class="pg-expiry-btn"
+                [class.pg-expiry-active]="form.expirationDays === opt"
+                (click)="form.expirationDays = opt">
+                {{ opt }}j
+              </button>
+            }
+            <button
+              class="pg-expiry-btn"
+              [class.pg-expiry-active]="form.expirationDays === null"
+              (click)="form.expirationDays = null">
+              Permanent
+            </button>
+          </div>
+        </div>
+
+        @if (formError()) {
+          <p class="pg-form-error">{{ formError() }}</p>
+        }
+      </div>
+
+      <div class="pg-modal-footer">
+        <button class="pg-btn-cancel" (click)="showForm.set(false)">Annuler</button>
+        <button class="pg-btn-submit" (click)="submitForm()" [disabled]="formLoading()">
+          @if (formLoading()) { Création… } @else { Créer la galerie }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ── Liste des galeries ── -->
+@if (loading()) {
+  <div class="pg-loading">Chargement…</div>
+} @else if (galleries().length === 0) {
+  <div class="pg-empty-state">
+    <div class="pg-empty-icon">🔗</div>
+    <p class="pg-empty-title">Aucune galerie privée</p>
+    <p class="pg-empty-sub">Créez votre première galerie pour partager des photos avec un client.</p>
+    <button class="pg-create-btn" (click)="openForm()">Créer une galerie</button>
+  </div>
+} @else {
+  <div class="pg-table-wrap">
+    <table class="pg-table">
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Événement</th>
+          <th>Statut</th>
+          <th>Expiration</th>
+          <th>Vues</th>
+          <th>Télécharg.</th>
+          <th>Lien</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (g of galleries(); track g.id) {
+          <tr [class.pg-row-inactive]="!g.active || g.expired">
+            <td>
+              <div class="pg-client-name">{{ g.clientName }}</div>
+              @if (g.clientEmail) {
+                <div class="pg-client-email">{{ g.clientEmail }}</div>
+              }
+              @if (g.hasPassword) {
+                <span class="pg-badge-pw">🔐 Protégée</span>
+              }
+            </td>
+            <td class="pg-event-cell">{{ g.eventTitle }}</td>
+            <td>
+              @if (!g.active) {
+                <span class="pg-status pg-status-off">Désactivée</span>
+              } @else if (g.expired) {
+                <span class="pg-status pg-status-expired">Expirée</span>
+              } @else {
+                <span class="pg-status pg-status-on">Active</span>
+              }
+            </td>
+            <td class="pg-date-cell">{{ formatDate(g.expiresAt) }}</td>
+            <td class="pg-count-cell">{{ g.viewCount }}</td>
+            <td class="pg-count-cell">{{ g.downloadCount }}</td>
+            <td>
+              <button class="pg-copy-btn" (click)="copyLink(g.accessToken)">
+                @if (copiedToken() === g.accessToken) {
+                  ✅ Copié !
+                } @else {
+                  📋 Copier
+                }
+              </button>
+            </td>
+            <td>
+              <div class="pg-row-actions">
+                <a [href]="getGalleryUrl(g.accessToken)" target="_blank" class="pg-action-link" title="Prévisualiser">
+                  👁
+                </a>
+                @if (g.active && !g.expired) {
+                  <button class="pg-action-btn pg-action-off" (click)="deactivate(g)" title="Désactiver">
+                    🚫
+                  </button>
+                }
+                <button class="pg-action-btn pg-action-del" (click)="delete(g)" title="Supprimer">
+                  🗑
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  @if (pages.length > 1) {
+    <div class="pg-pagination">
+      @for (p of pages; track p) {
+        <button
+          class="pg-page-btn"
+          [class.pg-page-active]="currentPage() === p"
+          (click)="loadGalleries(p)">
+          {{ p + 1 }}
+        </button>
+      }
+    </div>
+  }
+}

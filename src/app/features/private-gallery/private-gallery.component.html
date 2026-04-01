@@ -1,0 +1,189 @@
+<!-- ── CHARGEMENT ── -->
+@if (state() === 'loading') {
+  <div class="pg-center">
+    <div class="pg-spinner"></div>
+    <p class="pg-loading-text">Chargement de votre galerie…</p>
+  </div>
+}
+
+<!-- ── ERREUR ── -->
+@if (state() === 'error') {
+  <div class="pg-center">
+    <div class="pg-error-icon">🔒</div>
+    <h2 class="pg-error-title">Accès impossible</h2>
+    <p class="pg-error-msg">{{ errorMsg() }}</p>
+    <a href="/" class="pg-btn-back">Retour au site</a>
+  </div>
+}
+
+<!-- ── MOT DE PASSE ── -->
+@if (state() === 'password') {
+  <div class="pg-center">
+    <div class="pg-lock-icon">🔐</div>
+    <h2 class="pg-password-title">Galerie protégée</h2>
+    <p class="pg-password-sub">Entrez le mot de passe pour accéder à vos photos.</p>
+
+    <div class="pg-password-form">
+      <input
+        type="password"
+        [(ngModel)]="passwordInput"
+        (keyup.enter)="submitPassword()"
+        placeholder="Mot de passe"
+        class="pg-input"
+        [class.pg-input-error]="passwordError()"
+        autofocus />
+      @if (passwordError()) {
+        <p class="pg-field-error">{{ passwordError() }}</p>
+      }
+      <button
+        (click)="submitPassword()"
+        [disabled]="passwordLoading()"
+        class="pg-btn-primary">
+        @if (passwordLoading()) {
+          <span class="pg-spinner-sm"></span> Vérification…
+        } @else {
+          Accéder à ma galerie →
+        }
+      </button>
+    </div>
+  </div>
+}
+
+<!-- ── GALERIE ── -->
+@if (state() === 'gallery' && gallery()) {
+  <div class="pg-wrapper">
+
+    <!-- Header -->
+    <header class="pg-header">
+      <div class="pg-header-inner">
+        <div class="pg-brand">TIPEU PHOTOGRAPHY</div>
+        <div class="pg-header-info">
+          <h1 class="pg-event-title">{{ gallery()!.eventTitle }}</h1>
+          <div class="pg-meta">
+            <span>👤 {{ gallery()!.clientName }}</span>
+            @if (gallery()!.eventDate) {
+              <span>📅 {{ gallery()!.eventDate | date:'d MMMM yyyy':'':'fr' }}</span>
+            }
+            @if (gallery()!.eventLocation) {
+              <span>📍 {{ gallery()!.eventLocation }}</span>
+            }
+            <span class="pg-expiry">🕐 {{ expiresLabel }}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Barre d'actions -->
+    <div class="pg-toolbar">
+      <div class="pg-toolbar-inner">
+
+        <!-- Stats -->
+        <div class="pg-stats">
+          <span>{{ gallery()!.totalPhotos }} photos</span>
+          @if (favoriteCount > 0) {
+            <span class="pg-stat-fav">❤️ {{ favoriteCount }} favori{{ favoriteCount > 1 ? 's' : '' }}</span>
+          }
+        </div>
+
+        <!-- Filtres + Actions -->
+        <div class="pg-actions">
+          <button
+            class="pg-filter-btn"
+            [class.pg-filter-active]="showOnlyFavorites()"
+            (click)="showOnlyFavorites.set(!showOnlyFavorites())">
+            ❤️ Mes favoris
+          </button>
+          <button class="pg-dl-all-btn" (click)="downloadAll()">
+            ⬇ Tout télécharger
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grille photos -->
+    <div class="pg-grid">
+      @for (photo of visiblePhotos(); track photo.id; let i = $index) {
+        <div class="pg-photo-card" (click)="openLightbox(i)">
+          <img
+            [src]="photo.thumbnailPath || photo.filePath"
+            [alt]="photo.caption || 'Photo'"
+            class="pg-photo-img"
+            loading="lazy" />
+
+          <!-- Overlay actions -->
+          <div class="pg-photo-overlay">
+            <button
+              class="pg-fav-btn"
+              [class.pg-fav-active]="isFavorite(photo.id)"
+              (click)="toggleFavorite(photo, $event)"
+              [title]="isFavorite(photo.id) ? 'Retirer des favoris' : 'Ajouter aux favoris'">
+              {{ isFavorite(photo.id) ? '❤️' : '🤍' }}
+            </button>
+            <button
+              class="pg-dl-btn"
+              (click)="downloadPhoto(photo, $event)"
+              title="Télécharger">
+              ⬇
+            </button>
+          </div>
+
+          @if (photo.caption) {
+            <div class="pg-caption">{{ photo.caption }}</div>
+          }
+        </div>
+      }
+
+      @if (visiblePhotos().length === 0 && showOnlyFavorites()) {
+        <div class="pg-empty">
+          <p>Vous n'avez pas encore de favoris.<br>Cliquez sur 🤍 sur une photo pour l'ajouter.</p>
+        </div>
+      }
+    </div>
+
+  </div>
+}
+
+<!-- ── LIGHTBOX ── -->
+@if (lightboxOpen() && lightboxPhoto()) {
+  <div class="lb-backdrop" (click)="closeLightbox()">
+    <div class="lb-container" (click)="$event.stopPropagation()">
+
+      <!-- Fermer -->
+      <button class="lb-close" (click)="closeLightbox()">✕</button>
+
+      <!-- Navigation précédent -->
+      <button class="lb-nav lb-prev" (click)="prevPhoto()">‹</button>
+
+      <!-- Image -->
+      <div class="lb-img-wrap">
+        <img
+          [src]="lightboxPhoto()!.filePath"
+          [alt]="lightboxPhoto()!.caption || 'Photo'"
+          class="lb-img" />
+      </div>
+
+      <!-- Navigation suivant -->
+      <button class="lb-nav lb-next" (click)="nextPhoto()">›</button>
+
+      <!-- Footer lightbox -->
+      <div class="lb-footer">
+        <span class="lb-counter">{{ lightboxIndex() + 1 }} / {{ visiblePhotos().length }}</span>
+        @if (lightboxPhoto()!.caption) {
+          <span class="lb-caption">{{ lightboxPhoto()!.caption }}</span>
+        }
+        <div class="lb-footer-actions">
+          <button
+            class="lb-fav-btn"
+            [class.lb-fav-active]="isFavorite(lightboxPhoto()!.id)"
+            (click)="toggleFavorite(lightboxPhoto()!, $event)">
+            {{ isFavorite(lightboxPhoto()!.id) ? '❤️ Favori' : '🤍 Ajouter aux favoris' }}
+          </button>
+          <button class="lb-dl-btn" (click)="downloadPhoto(lightboxPhoto()!, $event)">
+            ⬇ Télécharger
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+}

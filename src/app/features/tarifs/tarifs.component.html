@@ -1,0 +1,181 @@
+<!-- ── Hero ── -->
+<section class="tarifs-hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="relative z-10 text-center px-6 animate-fade-in">
+    <p class="overline-label">TIPEU PHOTOGRAPHY</p>
+    <h1 class="tarifs-title">Nos Tarifs</h1>
+    <p class="tarifs-subtitle">
+      Des formules pensées pour chaque moment. Transparence totale, sans surprise.
+    </p>
+  </div>
+</section>
+
+<!-- ── Onglets de catégories (sticky) ── -->
+<section class="tabs-section">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="tabs-bar">
+      @for (p of prestations; track p.id; let i = $index) {
+        <button
+          class="tab-btn"
+          [class.tab-active]="activeTab === i"
+          (click)="setTab(i)">
+          <span class="tab-icon">{{ p.icone }}</span>
+          {{ p.categorie }}
+        </button>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ── Contenu de la prestation active ── -->
+<section class="formules-section">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <!-- Sous-titre de la catégorie -->
+    <p class="categorie-sous-titre animate-fade-in">{{ activePrestation.sousTitre }}</p>
+
+    <!-- Grille de cartes -->
+    <div class="formules-grid animate-fade-in">
+      @for (formule of activePrestation.formules; track formule.nom) {
+        <div class="formule-card" [class.formule-populaire]="formule.populaire">
+
+          @if (formule.populaire) {
+            <div class="badge-populaire">⭐ Le plus demandé</div>
+          }
+
+          <div class="formule-header">
+            <h3 class="formule-nom">{{ formule.nom }}</h3>
+            <p class="formule-desc">{{ formule.description }}</p>
+          </div>
+
+          <!-- Prix -->
+          <div class="formule-prix">
+            <span class="prix-label">{{ formule.prixLabel }}</span>
+            <span class="prix-devise">FCFA</span>
+          </div>
+
+          <!-- Stats rapides : durée / photos / livraison -->
+          <div class="formule-stats">
+            <div class="stat-item">
+              <span class="stat-icon">⏱</span>
+              <span class="stat-val">{{ formule.duree }}</span>
+              <span class="stat-lbl">Durée</span>
+            </div>
+            <div class="stat-sep"></div>
+            <div class="stat-item">
+              <span class="stat-icon">🖼</span>
+              <span class="stat-val">{{ formule.photos }}</span>
+              <span class="stat-lbl">Livrées</span>
+            </div>
+            <div class="stat-sep"></div>
+            <div class="stat-item">
+              <span class="stat-icon">📦</span>
+              <span class="stat-val">{{ formule.livraison }}</span>
+              <span class="stat-lbl">Livraison</span>
+            </div>
+          </div>
+
+          <!-- Inclus -->
+          <ul class="formule-inclus">
+            @for (item of formule.inclus; track item) {
+              <li>
+                <svg class="check-icon" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z" clip-rule="evenodd"/>
+                </svg>
+                {{ item }}
+              </li>
+            }
+          </ul>
+
+          <!-- CTA WhatsApp -->
+          <a [href]="getWhatsappUrl(activePrestation, formule)"
+             target="_blank" rel="noopener"
+             class="formule-cta"
+             [class.formule-cta-primary]="formule.populaire">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.847L.057 23.882l6.197-1.625A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.003-1.371l-.359-.213-3.68.965.982-3.589-.234-.369A9.818 9.818 0 1112 21.818z"/>
+            </svg>
+            Réserver cette formule
+          </a>
+
+        </div>
+      }
+    </div>
+
+    <!-- ── Tableau comparatif ── -->
+    <div class="tableau-wrap animate-fade-in">
+      <h2 class="tableau-titre">Comparer les formules</h2>
+      <div class="tableau-scroll">
+        <table class="tableau">
+          <thead>
+            <tr>
+              <th class="tableau-th-label">Critère</th>
+              @for (formule of activePrestation.formules; track formule.nom) {
+                <th class="tableau-th" [class.tableau-th-pop]="formule.populaire">
+                  {{ formule.nom }}
+                  @if (formule.populaire) {
+                    <span class="tableau-pop-badge">⭐</span>
+                  }
+                </th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="tableau-row">
+              <td class="tableau-td-label">⏱ Durée</td>
+              @for (formule of activePrestation.formules; track formule.nom) {
+                <td class="tableau-td" [class.tableau-td-pop]="formule.populaire">{{ formule.duree }}</td>
+              }
+            </tr>
+            <tr class="tableau-row">
+              <td class="tableau-td-label">🖼 Photos livrées</td>
+              @for (formule of activePrestation.formules; track formule.nom) {
+                <td class="tableau-td" [class.tableau-td-pop]="formule.populaire">{{ formule.photos }}</td>
+              }
+            </tr>
+            <tr class="tableau-row">
+              <td class="tableau-td-label">📦 Délai livraison</td>
+              @for (formule of activePrestation.formules; track formule.nom) {
+                <td class="tableau-td" [class.tableau-td-pop]="formule.populaire">{{ formule.livraison }}</td>
+              }
+            </tr>
+            <tr class="tableau-row">
+              <td class="tableau-td-label">💰 Tarif</td>
+              @for (formule of activePrestation.formules; track formule.nom) {
+                <td class="tableau-td tableau-td-prix" [class.tableau-td-pop]="formule.populaire">{{ formule.prixLabel }} FCFA</td>
+              }
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Note ── -->
+<section class="note-section">
+  <div class="max-w-4xl mx-auto px-6 text-center">
+    <p class="note-text">
+      💡 Les tarifs indiqués sont des prix de départ. Chaque projet est unique — contactez-nous pour un devis personnalisé gratuit.
+      Les déplacements hors de Dakar peuvent être facturés en sus.
+    </p>
+  </div>
+</section>
+
+<!-- ── CTA final WhatsApp ── -->
+<section class="cta-section">
+  <div class="max-w-3xl mx-auto px-6 text-center">
+    <h2 class="cta-title">Vous ne trouvez pas ce qu'il vous faut ?</h2>
+    <p class="cta-subtitle">Discutons ensemble de votre projet, je vous propose une formule sur mesure.</p>
+    <a [href]="whatsappGeneralUrl" target="_blank" rel="noopener" class="cta-whatsapp">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.553 4.116 1.522 5.847L.057 23.882l6.197-1.625A11.953 11.953 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.003-1.371l-.359-.213-3.68.965.982-3.589-.234-.369A9.818 9.818 0 1112 21.818z"/>
+      </svg>
+      Discuter de mon projet sur WhatsApp
+    </a>
+  </div>
+</section>

@@ -19,8 +19,16 @@ export const routes: Routes = [
     loadComponent: () => import('./features/gallery/gallery.component').then(m => m.GalleryComponent)
   },
   {
+    path: 'galerie-privee/:token',
+    loadComponent: () => import('./features/private-gallery/private-gallery.component').then(m => m.PrivateGalleryComponent)
+  },
+  {
     path: 'contact',
     loadComponent: () => import('./features/contact/contact.component').then(m => m.ContactComponent)
+  },
+  {
+    path: 'tarifs',
+    loadComponent: () => import('./features/tarifs/tarifs.component').then(m => m.TarifsComponent)
   },
   {
     path: 'admin/login',
@@ -54,6 +62,10 @@ export const routes: Routes = [
       {
         path: 'messages',
         loadComponent: () => import('./features/admin/messages/messages.component').then(m => m.MessagesComponent)
+      },
+      {
+        path: 'galeries-privees',
+        loadComponent: () => import('./features/admin/private-galleries/admin-private-galleries.component').then(m => m.AdminPrivateGalleriesComponent)
       }
     ]
   },

@@ -84,6 +84,36 @@ export const CATEGORY_LABELS: Record<EventCategory, string> = {
   AUTRE: 'Autre'
 };
 
+// ── Galerie Privée ────────────────────────────────────────────
+
+export interface PrivateGallery {
+  id: number;
+  eventId: number;
+  eventTitle: string;
+  accessToken: string;
+  clientName: string;
+  clientEmail: string | null;
+  hasPassword: boolean;
+  expiresAt: string | null;
+  createdAt: string;
+  downloadCount: number;
+  viewCount: number;
+  active: boolean;
+  expired: boolean;
+}
+
+export interface PrivateGalleryContent {
+  galleryId: number;
+  clientName: string;
+  eventTitle: string;
+  eventDate: string;
+  eventLocation: string;
+  expiresAt: string | null;
+  photos: Photo[];
+  favoritePhotoIds: number[];
+  totalPhotos: number;
+}
+
 export const CATEGORY_ICONS: Record<EventCategory, string> = {
   MARIAGE: '💍',
   ANNIVERSAIRE: '🎂',

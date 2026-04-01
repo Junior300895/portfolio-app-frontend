@@ -4,7 +4,8 @@ import { Observable, map } from 'rxjs';
 import { environment } from '@env/environment';
 import {
   ApiResponse, PagedResponse, EventSummary, EventDetail,
-  Photo, Video, ContactMessage, AuthResponse
+  Photo, Video, ContactMessage, AuthResponse,
+  PrivateGallery, PrivateGalleryContent
 } from '@shared/models/models';
 
 @Injectable({ providedIn: 'root' })
@@ -138,5 +139,55 @@ export class AdminContactService {
   getUnreadCount(): Observable<number> {
     return this.http.get<ApiResponse<{ count: number }>>(`${this.base}/unread-count`)
       .pipe(map(r => r.data.count));
+  }
+}
+
+@Injectable({ providedIn: 'root' })
+export class PrivateGalleryApiService {
+  private http = inject(HttpClient);
+  private base = `${environment.apiUrl}/gallery/private`;
+  private adminBase = `${environment.apiUrl}/admin/private-galleries`;
+
+  // ── Client ──
+  getInfo(token: string): Observable<{ requiresPassword: boolean }> {
+    return this.http.get<ApiResponse<{ requiresPassword: boolean }>>(`${this.base}/${token}/info`)
+      .pipe(map(r => r.data));
+  }
+
+  access(token: string, password?: string): Observable<PrivateGalleryContent> {
+    return this.http.post<ApiResponse<PrivateGalleryContent>>(
+      `${this.base}/${token}/access`,
+      password ? { password } : {}
+    ).pipe(map(r => r.data));
+  }
+
+  toggleFavorite(token: string, photoId: number): Observable<{ favorited: boolean }> {
+    return this.http.post<ApiResponse<{ favorited: boolean }>>(
+      `${this.base}/${token}/favorites/${photoId}`, {}
+    ).pipe(map(r => r.data));
+  }
+
+  trackDownload(token: string): Observable<void> {
+    return this.http.post<void>(`${this.base}/${token}/download`, {});
+  }
+
+  // ── Admin ──
+  create(data: any): Observable<PrivateGallery> {
+    return this.http.post<ApiResponse<PrivateGallery>>(this.adminBase, data)
+      .pipe(map(r => r.data));
+  }
+
+  getAll(page = 0, size = 20): Observable<PagedResponse<PrivateGallery>> {
+    const params = new HttpParams().set('page', page).set('size', size);
+    return this.http.get<ApiResponse<PagedResponse<PrivateGallery>>>(this.adminBase, { params })
+      .pipe(map(r => r.data));
+  }
+
+  deactivate(id: number): Observable<void> {
+    return this.http.put<void>(`${this.adminBase}/${id}/deactivate`, {});
+  }
+
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.adminBase}/${id}`);
   }
 }
