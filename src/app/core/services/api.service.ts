@@ -187,6 +187,10 @@ export class PrivateGalleryApiService {
     return this.http.put<void>(`${this.adminBase}/${id}/deactivate`, {});
   }
 
+  reactivate(id: number): Observable<void> {
+    return this.http.put<void>(`${this.adminBase}/${id}/reactivate`, {});
+  }
+
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.adminBase}/${id}`);
   }

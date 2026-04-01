@@ -101,6 +101,11 @@ export class AdminPrivateGalleriesComponent implements OnInit {
     this.api.deactivate(gallery.id).subscribe(() => this.loadGalleries(this.currentPage()));
   }
 
+  reactivate(gallery: PrivateGallery) {
+    if (!confirm(`Réactiver la galerie de ${gallery.clientName} ?`)) return;
+    this.api.reactivate(gallery.id).subscribe(() => this.loadGalleries(this.currentPage()));
+  }
+
   delete(gallery: PrivateGallery) {
     if (!confirm(`Supprimer définitivement la galerie de ${gallery.clientName} ? Cette action est irréversible.`)) return;
     this.api.delete(gallery.id).subscribe(() => this.loadGalleries(this.currentPage()));

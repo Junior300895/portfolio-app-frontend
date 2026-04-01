@@ -156,6 +156,10 @@
                   <button class="pg-action-btn pg-action-off" (click)="deactivate(g)" title="Désactiver">
                     🚫
                   </button>
+                } @else if (!g.active) {
+                  <button class="pg-action-btn pg-action-on" (click)="reactivate(g)" title="Réactiver">
+                    ✅
+                  </button>
                 }
                 <button class="pg-action-btn pg-action-del" (click)="delete(g)" title="Supprimer">
                   🗑
