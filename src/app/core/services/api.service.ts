@@ -77,6 +77,11 @@ export class AdminEventService {
       .pipe(map(r => r.data));
   }
 
+  getStats(): Observable<{ totalEvents: number; totalPhotos: number; totalVideos: number }> {
+    return this.http.get<ApiResponse<{ totalEvents: number; totalPhotos: number; totalVideos: number }>>(`${this.base}/stats`)
+      .pipe(map(r => r.data));
+  }
+
   create(data: any): Observable<EventDetail> {
     return this.http.post<ApiResponse<EventDetail>>(this.base, data).pipe(map(r => r.data));
   }

@@ -30,6 +30,14 @@ export class DashboardComponent implements OnInit {
       this.recentEvents.set(data.content);
       this.stats.update(s => ({ ...s, totalEvents: data.totalElements }));
     });
+    this.adminEventService.getStats().subscribe(data => {
+      this.stats.update(s => ({
+        ...s,
+        totalEvents: data.totalEvents,
+        totalPhotos: data.totalPhotos,
+        totalVideos: data.totalVideos
+      }));
+    });
     this.adminContactService.getMessages(0).subscribe(data => {
       this.recentMessages.set(data.content.slice(0, 5));
     });
