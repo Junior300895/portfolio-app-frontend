@@ -48,7 +48,12 @@
                           <div class="w-full h-full flex items-center justify-center text-white/20 text-xs">📷</div>
                         }
                       </div>
-                      <span class="text-white text-sm font-medium line-clamp-1">{{ event.title }}</span>
+                      <span class="text-white text-sm font-medium line-clamp-1">
+                        {{ event.title }}
+                        @if (event.isPrivate) {
+                          <span class="ml-1 text-xs bg-red-500/15 text-red-400 px-1.5 py-0.5 rounded">🔒 Privé</span>
+                        }
+                      </span>
                     </div>
                   </td>
                   <td class="px-4 py-3 hidden md:table-cell">

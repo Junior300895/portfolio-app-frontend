@@ -72,6 +72,11 @@ export class AdminEventService {
       .pipe(map(r => r.data));
   }
 
+  getById(id: number): Observable<EventDetail> {
+    return this.http.get<ApiResponse<EventDetail>>(`${this.base}/${id}`)
+      .pipe(map(r => r.data));
+  }
+
   create(data: any): Observable<EventDetail> {
     return this.http.post<ApiResponse<EventDetail>>(this.base, data).pipe(map(r => r.data));
   }

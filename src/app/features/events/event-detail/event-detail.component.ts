@@ -17,6 +17,7 @@ export class EventDetailComponent implements OnInit {
 
   event = signal<EventDetail | null>(null);
   loading = signal(true);
+  isPrivate = signal(false);
   lightboxOpen = signal(false);
   lightboxIndex = signal(0);
 
@@ -24,7 +25,10 @@ export class EventDetailComponent implements OnInit {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.eventService.getEvent(id).subscribe({
       next: (data) => { this.event.set(data); this.loading.set(false); },
-      error: () => this.loading.set(false)
+      error: (err) => {
+        if (err.status === 403) this.isPrivate.set(true);
+        this.loading.set(false);
+      }
     });
   }
 
