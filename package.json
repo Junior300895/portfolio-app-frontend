@@ -10,6 +10,7 @@
     "test": "ng test",
     "build:ssr": "ng build --configuration production",
     "serve:ssr": "node dist/portfolio-photographe/server/server.mjs"
+    
   },
   "private": true,
   "dependencies": {
