@@ -76,6 +76,13 @@
             Mettre à la une (affiché sur la page d'accueil)
           </label>
         </div>
+
+        <div class="flex items-center gap-3">
+          <input formControlName="isPrivate" type="checkbox" id="isPrivate" class="w-4 h-4 accent-red-400">
+          <label for="isPrivate" class="text-white/60 text-sm cursor-pointer">
+            🔒 Événement privé (masqué du site public, accessible uniquement via galerie privée)
+          </label>
+        </div>
       </div>
 
       @if (error()) {

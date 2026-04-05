@@ -4,6 +4,19 @@
     <div class="min-h-screen bg-black flex items-center justify-center">
       <div class="spinner-amber"></div>
     </div>
+  } @else if (isPrivate()) {
+    <!-- Page accès privé -->
+    <div class="min-h-screen bg-black flex flex-col items-center justify-center gap-6 px-6 text-center">
+      <div class="text-6xl">🔒</div>
+      <h1 class="font-display text-white text-3xl font-light">Accès réservé</h1>
+      <p class="text-white/40 text-sm max-w-sm leading-relaxed">
+        Cet événement est privé. Les photos ont été partagées directement avec le client concerné via un lien sécurisé.
+      </p>
+      <p class="text-white/25 text-xs">
+        Vous êtes le client ? Consultez votre email pour retrouver votre lien personnel.
+      </p>
+      <a routerLink="/evenements" class="btn-outline mt-2">← Retour aux événements</a>
+    </div>
   } @else if (!event()) {
     <div class="min-h-screen bg-black flex flex-col items-center justify-center gap-4 text-white/40">
       <div class="text-5xl">😕</div>

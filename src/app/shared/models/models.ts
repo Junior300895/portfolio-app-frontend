@@ -25,6 +25,7 @@ export interface EventSummary {
   location: string;
   category: EventCategory;
   featured: boolean;
+  isPrivate: boolean;
   coverPhoto: string | null;
   photoCount: number;
   videoCount: number;

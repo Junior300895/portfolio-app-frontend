@@ -60,51 +60,97 @@
           } @else {
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               @for (event of events(); track event.id) {
-                <a [routerLink]="['/evenements', event.id]" class="card-event block group">
-                  <div class="relative overflow-hidden h-60 bg-zinc-900">
-                    @if (event.coverPhoto) {
-                      <img [src]="event.coverPhoto" [alt]="event.title"
-                           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                           loading="lazy">
-                    } @else {
-                      <div class="w-full h-full flex items-center justify-center text-5xl text-white/10">
-                        {{ getCategoryIcon(event.category) }}
-                      </div>
-                    }
-                    <div class="absolute top-3 left-3">
-                      <span class="bg-amber-400 text-black text-[9px] font-bold tracking-widest uppercase px-2.5 py-1">
-                        {{ getCategoryLabel(event.category) }}
-                      </span>
-                    </div>
-                    @if (event.featured) {
-                      <div class="absolute top-3 right-3">
-                        <span class="bg-white/10 backdrop-blur text-white text-[9px] font-medium tracking-widest uppercase px-2.5 py-1 border border-white/20">
-                          ★ À la une
+                @if (!event.isPrivate) {
+                  <!-- Carte publique -->
+                  <a [routerLink]="['/evenements', event.id]" class="card-event block group">
+                    <div class="relative overflow-hidden h-60 bg-zinc-900">
+                      @if (event.coverPhoto) {
+                        <img [src]="event.coverPhoto" [alt]="event.title"
+                             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                             loading="lazy">
+                      } @else {
+                        <div class="w-full h-full flex items-center justify-center text-5xl text-white/10">
+                          {{ getCategoryIcon(event.category) }}
+                        </div>
+                      }
+                      <div class="absolute top-3 left-3">
+                        <span class="bg-amber-400 text-black text-[9px] font-bold tracking-widest uppercase px-2.5 py-1">
+                          {{ getCategoryLabel(event.category) }}
                         </span>
                       </div>
-                    }
-                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-500 flex items-center justify-center">
-                      <span class="text-white text-xs tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 border border-white px-4 py-2">
-                        Voir les photos
-                      </span>
+                      @if (event.featured) {
+                        <div class="absolute top-3 right-3">
+                          <span class="bg-white/10 backdrop-blur text-white text-[9px] font-medium tracking-widest uppercase px-2.5 py-1 border border-white/20">
+                            ★ À la une
+                          </span>
+                        </div>
+                      }
+                      <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-500 flex items-center justify-center">
+                        <span class="text-white text-xs tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300 border border-white px-4 py-2">
+                          Voir les photos
+                        </span>
+                      </div>
+                    </div>
+                    <div class="p-5 border-t border-white/5">
+                      <h3 class="font-display text-white text-lg font-light mb-2 group-hover:text-amber-400 transition-colors line-clamp-1">
+                        {{ event.title }}
+                      </h3>
+                      <p class="text-white/40 text-xs mb-3 line-clamp-2">{{ event.description }}</p>
+                      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-white/30 text-xs">
+                        @if (event.eventDate) {
+                          <span>{{ formatDate(event.eventDate) }}</span>
+                        }
+                        @if (event.location) {
+                          <span class="truncate max-w-[140px]">{{ event.location }}</span>
+                        }
+                        <span class="ml-auto text-white/20">{{ event.photoCount }}p · {{ event.videoCount }}v</span>
+                      </div>
+                    </div>
+                  </a>
+                } @else {
+                  <!-- Carte privée -->
+                  <div class="card-event cursor-default opacity-80">
+                    <div class="relative overflow-hidden h-60 bg-zinc-900">
+                      @if (event.coverPhoto) {
+                        <img [src]="event.coverPhoto" [alt]="event.title"
+                             class="w-full h-full object-cover blur-sm scale-105"
+                             loading="lazy">
+                      } @else {
+                        <div class="w-full h-full flex items-center justify-center text-5xl text-white/10">
+                          {{ getCategoryIcon(event.category) }}
+                        </div>
+                      }
+                      <div class="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-2">
+                        <svg class="w-8 h-8 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        <span class="text-white/50 text-xs tracking-widest uppercase">Accès privé</span>
+                      </div>
+                      <div class="absolute top-3 left-3">
+                        <span class="bg-amber-400 text-black text-[9px] font-bold tracking-widest uppercase px-2.5 py-1">
+                          {{ getCategoryLabel(event.category) }}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="p-5 border-t border-white/5">
+                      <h3 class="font-display text-white text-lg font-light mb-2 line-clamp-1">
+                        {{ event.title }}
+                      </h3>
+                      <p class="text-white/30 text-xs mb-3 italic">
+                        🔒 Cet événement est réservé au client. Consultez votre lien privé.
+                      </p>
+                      <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-white/30 text-xs">
+                        @if (event.eventDate) {
+                          <span>{{ formatDate(event.eventDate) }}</span>
+                        }
+                        @if (event.location) {
+                          <span class="truncate max-w-[140px]">{{ event.location }}</span>
+                        }
+                      </div>
                     </div>
                   </div>
-                  <div class="p-5 border-t border-white/5">
-                    <h3 class="font-display text-white text-lg font-light mb-2 group-hover:text-amber-400 transition-colors line-clamp-1">
-                      {{ event.title }}
-                    </h3>
-                    <p class="text-white/40 text-xs mb-3 line-clamp-2">{{ event.description }}</p>
-                    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-white/30 text-xs">
-                      @if (event.eventDate) {
-                        <span>{{ formatDate(event.eventDate) }}</span>
-                      }
-                      @if (event.location) {
-                        <span class="truncate max-w-[140px]">{{ event.location }}</span>
-                      }
-                      <span class="ml-auto text-white/20">{{ event.photoCount }}p · {{ event.videoCount }}v</span>
-                    </div>
-                  </div>
-                </a>
+                }
               }
             </div>
 
@@ -137,4 +183,4 @@
           }
         </div>
       </section>
-    </div>
+</div>

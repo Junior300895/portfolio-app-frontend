@@ -30,7 +30,8 @@ export class EventFormComponent implements OnInit {
     eventDate: [''],
     location: [''],
     category: [''],
-    featured: [false]
+    featured: [false],
+    isPrivate: [false]
   });
 
   ngOnInit() {
@@ -39,7 +40,7 @@ export class EventFormComponent implements OnInit {
       this.isEdit.set(true);
       this.eventId.set(Number(id));
       this.pageLoading.set(true);
-      this.eventService.getEvent(Number(id)).subscribe({
+      this.adminEventService.getById(Number(id)).subscribe({
         next: (data) => {
           this.form.patchValue({
             title: data.title,
@@ -47,7 +48,8 @@ export class EventFormComponent implements OnInit {
             eventDate: data.eventDate,
             location: data.location,
             category: data.category,
-            featured: data.featured
+            featured: data.featured,
+            isPrivate: data.isPrivate ?? false
           });
           this.pageLoading.set(false);
         },
