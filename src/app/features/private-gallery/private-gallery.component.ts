@@ -1,5 +1,5 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, signal, computed, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PrivateGalleryApiService } from '@core/services/api.service';
@@ -46,6 +46,8 @@ export class PrivateGalleryComponent implements OnInit {
     }
     return g.photos;
   });
+
+  private platformId = inject(PLATFORM_ID);
 
   constructor(
     private route: ActivatedRoute,
@@ -101,12 +103,12 @@ export class PrivateGalleryComponent implements OnInit {
   openLightbox(index: number) {
     this.lightboxIndex.set(index);
     this.lightboxOpen.set(true);
-    document.body.style.overflow = 'hidden';
+    if (isPlatformBrowser(this.platformId)) { document.body.style.overflow = 'hidden'; }
   }
 
   closeLightbox() {
     this.lightboxOpen.set(false);
-    document.body.style.overflow = '';
+    if (isPlatformBrowser(this.platformId)) { document.body.style.overflow = ''; }
   }
 
   prevPhoto() {
@@ -160,6 +162,7 @@ export class PrivateGalleryComponent implements OnInit {
     fetch(url)
       .then(res => res.blob())
       .then(blob => {
+        if (!isPlatformBrowser(this.platformId)) return;
         const blobUrl = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = blobUrl;
@@ -171,7 +174,7 @@ export class PrivateGalleryComponent implements OnInit {
       })
       .catch(() => {
         // Fallback : ouvrir dans un nouvel onglet
-        window.open(url, '_blank');
+        if (isPlatformBrowser(this.platformId)) { window.open(url, '_blank'); }
       });
   }
 

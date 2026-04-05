@@ -1,8 +1,9 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Title, Meta } from '@angular/platform-browser';
 import { EventService } from '@core/services/api.service';
-import { EventDetail, Photo, CATEGORY_LABELS } from '@shared/models/models';
+import { EventDetail, CATEGORY_LABELS } from '@shared/models/models';
 
 @Component({
   selector: 'app-event-detail',
@@ -10,21 +11,44 @@ import { EventDetail, Photo, CATEGORY_LABELS } from '@shared/models/models';
   imports: [RouterLink, CommonModule],
   templateUrl: './event-detail.component.html',
   styleUrl: './event-detail.component.css',
-  })
+})
 export class EventDetailComponent implements OnInit {
   private eventService = inject(EventService);
   private route = inject(ActivatedRoute);
+  private titleService = inject(Title);
+  private metaService = inject(Meta);
 
   event = signal<EventDetail | null>(null);
   loading = signal(true);
+  isPrivate = signal(false);
   lightboxOpen = signal(false);
   lightboxIndex = signal(0);
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.eventService.getEvent(id).subscribe({
-      next: (data) => { this.event.set(data); this.loading.set(false); },
-      error: () => this.loading.set(false)
+      next: (data) => {
+        this.event.set(data);
+        this.loading.set(false);
+        // SEO dynamique avec les données de l'événement
+        const title = `${data.title} — TIPEU PHOTOGRAPHY`;
+        const desc = data.description
+          ? data.description.substring(0, 155) + '...'
+          : `Découvrez les photos de ${data.title} par TIPEU Photography.`;
+        this.titleService.setTitle(title);
+        this.metaService.updateTag({ name: 'description', content: desc });
+        this.metaService.updateTag({ property: 'og:title', content: title });
+        this.metaService.updateTag({ property: 'og:description', content: desc });
+        this.metaService.updateTag({ property: 'og:url', content: `https://tipeu-photography.vercel.app/evenements/${id}` });
+        if (data.coverPhoto) {
+          this.metaService.updateTag({ property: 'og:image', content: data.coverPhoto });
+          this.metaService.updateTag({ name: 'twitter:image', content: data.coverPhoto });
+        }
+      },
+      error: (err) => {
+        if (err.status === 403) this.isPrivate.set(true);
+        this.loading.set(false);
+      }
     });
   }
 

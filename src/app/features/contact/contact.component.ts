@@ -1,3 +1,4 @@
+import { Title, Meta } from '@angular/platform-browser';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
@@ -12,6 +13,8 @@ import { ContactApiService } from '@core/services/api.service';
   })
 export class ContactComponent {
   private fb = inject(FormBuilder);
+  private titleService = inject(Title);
+  private metaService = inject(Meta);
   private contactService = inject(ContactApiService);
 
   success = signal(false);

@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { AdminContactService } from '@core/services/api.service';
 import { ContactMessage } from '@shared/models/models';
 
@@ -12,7 +12,7 @@ import { ContactMessage } from '@shared/models/models';
 })
 export class MessagesComponent implements OnInit {
   private contactService = inject(AdminContactService);
-
+private platformId = inject(PLATFORM_ID);
   messages = signal<ContactMessage[]>([]);
   loading = signal(true);
   currentPage = signal(0);
@@ -76,7 +76,7 @@ export class MessagesComponent implements OnInit {
     lines.push('Cordialement,');
     lines.push('*TIPEU PHOTOGRAPHY*');
     const text = encodeURIComponent(lines.join('\n'));
-    window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
+    if (isPlatformBrowser(this.platformId)) { window.open(`https://wa.me/${phone}?text=${text}`, '_blank'); }
   }
 
   formatPhone(phone: string): string {

@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Title, Meta } from '@angular/platform-browser';
 import { EventService } from '@core/services/api.service';
 import { EventSummary, CATEGORY_LABELS, CATEGORY_ICONS } from '@shared/models/models';
 
@@ -13,6 +14,8 @@ import { EventSummary, CATEGORY_LABELS, CATEGORY_ICONS } from '@shared/models/mo
 })
 export class HomeComponent implements OnInit {
   private eventService = inject(EventService);
+  private titleService = inject(Title);
+  private metaService = inject(Meta);
 
   featured = signal<EventSummary[]>([]);
   loading = signal(true);
@@ -25,6 +28,12 @@ export class HomeComponent implements OnInit {
   ];
 
   ngOnInit() {
+    this.titleService.setTitle('TIPEU PHOTOGRAPHY — Photographe Freelance à Dakar');
+    this.metaService.updateTag({ name: 'description', content: 'Photographe freelance à Dakar spécialisé dans les mariages, conférences, anniversaires et concerts. Découvrez le portfolio de TIPEU Photography.' });
+    this.metaService.updateTag({ property: 'og:title', content: 'TIPEU PHOTOGRAPHY — Photographe Freelance à Dakar' });
+    this.metaService.updateTag({ property: 'og:description', content: 'Photographe freelance à Dakar spécialisé dans les mariages, conférences, anniversaires et concerts.' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://tipeu-photography.vercel.app' });
+
     this.eventService.getFeatured().subscribe({
       next: (data) => { this.featured.set(data.slice(0, 3)); this.loading.set(false); },
       error: () => this.loading.set(false)

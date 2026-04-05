@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { Title, Meta } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -29,7 +30,17 @@ interface Prestation {
   templateUrl: './tarifs.component.html',
   styleUrls: ['./tarifs.component.css']
 })
-export class TarifsComponent {
+export class TarifsComponent implements OnInit {
+  private titleService = inject(Title);
+  private metaService = inject(Meta);
+
+  ngOnInit() {
+    this.titleService.setTitle('Tarifs — TIPEU PHOTOGRAPHY');
+    this.metaService.updateTag({ name: 'description', content: 'Découvrez les tarifs de TIPEU Photography : mariage, photo à domicile, photo en studio à Dakar. Formules transparentes en FCFA.' });
+    this.metaService.updateTag({ property: 'og:title', content: 'Tarifs — TIPEU PHOTOGRAPHY' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://tipeu-photography.vercel.app/tarifs' });
+  }
+
 
   readonly WHATSAPP_NUMBER = '221773012470';
 

@@ -1,4 +1,5 @@
-import { Component, inject, signal, HostListener } from '@angular/core';
+import { Component, inject, signal, HostListener, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
@@ -12,6 +13,7 @@ import { AuthService } from '@core/services/auth.service';
 })
 export class NavbarComponent {
   auth = inject(AuthService);
+  private platformId = inject(PLATFORM_ID);
   menuOpen = signal(false);
   scrolled = signal(false);
 
@@ -23,6 +25,8 @@ export class NavbarComponent {
 
   @HostListener('window:scroll')
   onScroll() {
-    this.scrolled.set(window.scrollY > 50);
+    if (isPlatformBrowser(this.platformId)) {
+      this.scrolled.set(window.scrollY > 50);
+    }
   }
 }

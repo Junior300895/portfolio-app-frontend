@@ -1,5 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, signal, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PrivateGalleryApiService, AdminEventService } from '@core/services/api.service';
 import { PrivateGallery, EventSummary } from '@shared/models/models';
@@ -34,6 +34,8 @@ export class AdminPrivateGalleriesComponent implements OnInit {
 
   // Lien copié
   copiedToken = signal('');
+
+  private platformId = inject(PLATFORM_ID);
 
   constructor(
     private api: PrivateGalleryApiService,
@@ -112,7 +114,10 @@ export class AdminPrivateGalleriesComponent implements OnInit {
   }
 
   getGalleryUrl(token: string): string {
-    return `${window.location.origin}/galerie-privee/${token}`;
+    if (isPlatformBrowser(this.platformId)) {
+      return `${window.location.origin}/galerie-privee/${token}`;
+    }
+    return `/galerie-privee/${token}`;
   }
 
   copyLink(token: string) {

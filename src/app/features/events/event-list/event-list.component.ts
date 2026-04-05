@@ -1,5 +1,7 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
+import { Title, Meta } from '@angular/platform-browser';
+import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EventService } from '@core/services/api.service';
@@ -16,6 +18,9 @@ export class EventListComponent implements OnInit {
   private eventService = inject(EventService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private platformId = inject(PLATFORM_ID);
+  private titleService = inject(Title);
+  private metaService = inject(Meta);
 
   events = signal<EventSummary[]>([]);
   categories = signal<string[]>([]);
@@ -27,6 +32,11 @@ export class EventListComponent implements OnInit {
   isSearchMode = false;
 
   ngOnInit() {
+    this.titleService.setTitle('Événements — TIPEU PHOTOGRAPHY');
+    this.metaService.updateTag({ name: 'description', content: 'Découvrez tous les événements photographiés par TIPEU Photography : mariages, conférences, concerts, anniversaires à Dakar.' });
+    this.metaService.updateTag({ property: 'og:title', content: 'Événements — TIPEU PHOTOGRAPHY' });
+    this.metaService.updateTag({ property: 'og:url', content: 'https://tipeu-photography.vercel.app/evenements' });
+
     this.eventService.getCategories().subscribe(cats => this.categories.set(cats));
     this.load();
   }
@@ -70,7 +80,7 @@ export class EventListComponent implements OnInit {
 
   goToPage(page: number) {
     this.currentPage.set(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (isPlatformBrowser(this.platformId)) { window.scrollTo({ top: 0, behavior: 'smooth' }); }
     this.load();
   }
 
