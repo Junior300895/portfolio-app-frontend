@@ -1,43 +1,26 @@
 {
+  "version": 2,
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/portfolio-photographe/browser",
-  "framework": "angular",
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://portfolio-app-backend-57tj.onrender.com/api/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
+  "functions": {
+    "dist/portfolio-photographe/server/server.mjs": {
+      "runtime": "nodejs20.x"
     }
-  ],
-  "headers": [
+  },
+  "routes": [
     {
-      "source": "/(.*\\.js|.*\\.css|.*\\.woff2?|.*\\.png|.*\\.jpg|.*\\.svg|.*\\.ico)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
+      "src": "/api/(.*)",
+      "dest": "https://portfolio-app-backend-57tj.onrender.com/api/$1"
     },
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "SAMEORIGIN"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        }
-      ]
+      "src": "/(.*\\.js|.*\\.css|.*\\.woff2?|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.svg|.*\\.ico|.*\\.webp)",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
+      "dest": "/dist/portfolio-photographe/browser/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dist/portfolio-photographe/server/server.mjs"
     }
   ]
 }

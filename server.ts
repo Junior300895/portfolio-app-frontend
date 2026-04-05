@@ -5,7 +5,6 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
 import bootstrap from './src/main.server';
 
-// The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
   const server = express();
   const serverDistFolder = dirname(fileURLToPath(import.meta.url));
@@ -17,15 +16,12 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
 
-  // Serve static files from /browser
-  server.get('*.*', express.static(browserDistFolder, {
-    maxAge: '1y'
-  }));
+  // Assets statiques (images, polices, etc.)
+  server.get('*.*', express.static(browserDistFolder, { maxAge: '1y' }));
 
-  // All regular routes use the Angular engine
+  // Toutes les routes → rendu SSR Angular
   server.get('*', (req, res, next) => {
     const { protocol, originalUrl, baseUrl, headers } = req;
-
     commonEngine
       .render({
         bootstrap,
@@ -41,14 +37,14 @@ export function app(): express.Express {
   return server;
 }
 
-function run(): void {
-  const port = process.env['PORT'] || 4000;
+// Export pour Vercel Serverless Function
+const server = app();
+export default server;
 
-  // Start up the Node server
-  const server = app();
+// Démarrage local (ignoré par Vercel)
+if (process.env['NODE_ENV'] !== 'production' || process.env['LOCAL_DEV']) {
+  const port = process.env['PORT'] || 4000;
   server.listen(port, () => {
-    console.log(`Node Express server listening on http://localhost:${port}`);
+    console.log(`SSR server listening on http://localhost:${port}`);
   });
 }
-
-run();
