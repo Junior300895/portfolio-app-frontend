@@ -103,12 +103,10 @@ export class PrivateGalleryComponent implements OnInit {
   openLightbox(index: number) {
     this.lightboxIndex.set(index);
     this.lightboxOpen.set(true);
-    if (isPlatformBrowser(this.platformId)) { document.body.style.overflow = 'hidden'; }
   }
 
   closeLightbox() {
     this.lightboxOpen.set(false);
-    if (isPlatformBrowser(this.platformId)) { document.body.style.overflow = ''; }
   }
 
   prevPhoto() {
@@ -121,6 +119,32 @@ export class PrivateGalleryComponent implements OnInit {
     const photos = this.visiblePhotos();
     const i = this.lightboxIndex();
     this.lightboxIndex.set(i < photos.length - 1 ? i + 1 : 0);
+  }
+
+  // ── Swipe tactile ──
+
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private readonly SWIPE_THRESHOLD = 50;
+
+  onTouchStart(event: TouchEvent) {
+    this.touchStartX = event.changedTouches[0].clientX;
+    this.touchStartY = event.changedTouches[0].clientY;
+  }
+
+  onTouchEnd(event: TouchEvent) {
+    const deltaX = event.changedTouches[0].clientX - this.touchStartX;
+    const deltaY = event.changedTouches[0].clientY - this.touchStartY;
+
+    // Ignorer si mouvement vertical dominant (scroll)
+    if (Math.abs(deltaY) > Math.abs(deltaX)) return;
+    if (Math.abs(deltaX) < this.SWIPE_THRESHOLD) return;
+
+    if (deltaX < 0) {
+      this.nextPhoto(); // swipe gauche → suivante
+    } else {
+      this.prevPhoto(); // swipe droite → précédente
+    }
   }
 
   // ── Favoris ──

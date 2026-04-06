@@ -146,7 +146,10 @@
 <!-- ── LIGHTBOX ── -->
 @if (lightboxOpen() && lightboxPhoto()) {
   <div class="lb-backdrop" (click)="closeLightbox()">
-    <div class="lb-container" (click)="$event.stopPropagation()">
+    <div class="lb-container"
+         (click)="$event.stopPropagation()"
+         (touchstart)="onTouchStart($event)"
+         (touchend)="onTouchEnd($event)">
 
       <!-- Fermer -->
       <button class="lb-close" (click)="closeLightbox()">✕</button>
