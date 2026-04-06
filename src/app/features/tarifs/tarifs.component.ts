@@ -37,7 +37,7 @@ export class TarifsComponent implements OnInit {
   private titleService = inject(Title);
   private metaService = inject(Meta);
 
-  readonly WHATSAPP = '221773012470';
+  readonly WHATSAPP = '221774602558';
   activeTab = signal<string>('evenement');
 
   categories: Categorie[] = [
