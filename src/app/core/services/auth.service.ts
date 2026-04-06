@@ -55,13 +55,16 @@ export class AuthService {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
-  private hasValidToken(): boolean {
+  hasValidToken(): boolean {
     if (!this.isBrowser) return false;
     const token = localStorage.getItem(this.TOKEN_KEY);
     if (!token) return false;
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.exp * 1000 > Date.now();
+      const isValid = payload.exp * 1000 > Date.now();
+      // Mettre à jour le signal si le token a expiré
+      if (!isValid) this.isAuthenticated.set(false);
+      return isValid;
     } catch {
       return false;
     }
