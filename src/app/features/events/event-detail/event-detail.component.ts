@@ -1,6 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
 import { RouterLink, ActivatedRoute } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Title, Meta } from '@angular/platform-browser';
 import { EventService } from '@core/services/api.service';
 import { EventDetail, CATEGORY_LABELS } from '@shared/models/models';
@@ -17,6 +17,7 @@ export class EventDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private titleService = inject(Title);
   private metaService = inject(Meta);
+  private platformId = inject(PLATFORM_ID);
 
   event = signal<EventDetail | null>(null);
   loading = signal(true);
@@ -24,13 +25,17 @@ export class EventDetailComponent implements OnInit {
   lightboxOpen = signal(false);
   lightboxIndex = signal(0);
 
+  // Swipe
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private readonly SWIPE_THRESHOLD = 50; // px minimum pour valider un swipe
+
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.eventService.getEvent(id).subscribe({
       next: (data) => {
         this.event.set(data);
         this.loading.set(false);
-        // SEO dynamique avec les données de l'événement
         const title = `${data.title} — TIPEU PHOTOGRAPHY`;
         const desc = data.description
           ? data.description.substring(0, 155) + '...'
@@ -52,10 +57,51 @@ export class EventDetailComponent implements OnInit {
     });
   }
 
-  openLightbox(index: number) { this.lightboxIndex.set(index); this.lightboxOpen.set(true); }
-  closeLightbox() { this.lightboxOpen.set(false); }
-  prevPhoto() { const i = this.lightboxIndex(); this.lightboxIndex.set(i > 0 ? i - 1 : this.event()!.photos.length - 1); }
-  nextPhoto() { const i = this.lightboxIndex(); this.lightboxIndex.set(i < this.event()!.photos.length - 1 ? i + 1 : 0); }
+  // ── Lightbox ──────────────────────────────────────────────────
+
+  openLightbox(index: number) {
+    this.lightboxIndex.set(index);
+    this.lightboxOpen.set(true);
+  }
+
+  closeLightbox() {
+    this.lightboxOpen.set(false);
+  }
+
+  prevPhoto() {
+    const i = this.lightboxIndex();
+    this.lightboxIndex.set(i > 0 ? i - 1 : this.event()!.photos.length - 1);
+  }
+
+  nextPhoto() {
+    const i = this.lightboxIndex();
+    this.lightboxIndex.set(i < this.event()!.photos.length - 1 ? i + 1 : 0);
+  }
+
+  // ── Swipe tactile ─────────────────────────────────────────────
+
+  onTouchStart(event: TouchEvent) {
+    this.touchStartX = event.changedTouches[0].clientX;
+    this.touchStartY = event.changedTouches[0].clientY;
+  }
+
+  onTouchEnd(event: TouchEvent) {
+    const deltaX = event.changedTouches[0].clientX - this.touchStartX;
+    const deltaY = event.changedTouches[0].clientY - this.touchStartY;
+
+    // Ignorer si le mouvement vertical est dominant (scroll)
+    if (Math.abs(deltaY) > Math.abs(deltaX)) return;
+
+    if (Math.abs(deltaX) < this.SWIPE_THRESHOLD) return;
+
+    if (deltaX < 0) {
+      this.nextPhoto(); // swipe gauche → photo suivante
+    } else {
+      this.prevPhoto(); // swipe droite → photo précédente
+    }
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────
 
   getCategoryLabel(cat: string) { return CATEGORY_LABELS[cat as keyof typeof CATEGORY_LABELS] ?? cat; }
   formatDate(d: string) { return new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }); }

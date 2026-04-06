@@ -214,6 +214,8 @@
   justify-content: center;
   backdrop-filter: blur(12px);
   animation: lb-in 0.2s ease;
+  overflow: hidden;
+  touch-action: none;
 }
 
 @keyframes lb-in {
