@@ -135,15 +135,12 @@ export class PrivateGalleryComponent implements OnInit {
   onTouchEnd(event: TouchEvent) {
     const deltaX = event.changedTouches[0].clientX - this.touchStartX;
     const deltaY = event.changedTouches[0].clientY - this.touchStartY;
-
-    // Ignorer si mouvement vertical dominant (scroll)
     if (Math.abs(deltaY) > Math.abs(deltaX)) return;
     if (Math.abs(deltaX) < this.SWIPE_THRESHOLD) return;
-
     if (deltaX < 0) {
-      this.nextPhoto(); // swipe gauche → suivante
+      this.nextPhoto();
     } else {
-      this.prevPhoto(); // swipe droite → précédente
+      this.prevPhoto();
     }
   }
 
@@ -185,8 +182,27 @@ export class PrivateGalleryComponent implements OnInit {
   private downloadUrl(url: string, filename: string) {
     fetch(url)
       .then(res => res.blob())
-      .then(blob => {
+      .then(async blob => {
         if (!isPlatformBrowser(this.platformId)) return;
+
+        const mimeType = blob.type || 'image/jpeg';
+        const file = new File([blob], filename, { type: mimeType });
+
+        // Web Share API — enregistre dans la galerie photo sur mobile
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: 'Photo TIPEU Photography'
+            });
+            return;
+          } catch (err: any) {
+            // Annulé par l'utilisateur
+            if (err?.name === 'AbortError') return;
+          }
+        }
+
+        // Fallback desktop : téléchargement classique
         const blobUrl = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = blobUrl;
@@ -197,7 +213,6 @@ export class PrivateGalleryComponent implements OnInit {
         setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
       })
       .catch(() => {
-        // Fallback : ouvrir dans un nouvel onglet
         if (isPlatformBrowser(this.platformId)) { window.open(url, '_blank'); }
       });
   }
