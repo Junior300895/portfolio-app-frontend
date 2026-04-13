@@ -157,45 +157,43 @@
   }
 
   @if (lightboxOpen() && event()) {
-    <div class="ed-lb-backdrop" (click)="closeLightbox()">
-      <div class="ed-lb-box"
+    <div class="lb-backdrop" (click)="closeLightbox()">
+      <div class="lb-container"
            (click)="$event.stopPropagation()"
            (touchstart)="onTouchStart($event)"
            (touchend)="onTouchEnd($event)">
 
         <!-- Fond flouté style Apple Photos -->
-        <div class="ed-lb-bg-blur"
-             [style.background-image]="'url(' + event()!.photos[lightboxIndex()].filePath + ')'">
-        </div>
-        <div class="ed-lb-bg-dim"></div>
+        <img class="lb-bg-blur"
+             [src]="event()!.photos[lightboxIndex()].filePath"
+             alt="" aria-hidden="true">
+        <div class="lb-bg-dim"></div>
 
-        <button class="ed-lb-close" (click)="closeLightbox()">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-        <button class="ed-lb-nav ed-lb-prev" (click)="prevPhoto()">
-          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
-          </svg>
-        </button>
-        <img
-          [src]="event()!.photos[lightboxIndex()].filePath"
-          [alt]="event()!.photos[lightboxIndex()].caption || ''"
-          class="ed-lb-img">
-        <button class="ed-lb-nav ed-lb-next" (click)="nextPhoto()">
-          <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
-          </svg>
-        </button>
-        <div class="ed-lb-footer">
-          @if (event()!.photos[lightboxIndex()].caption) {
-            <span class="text-white/50 text-sm flex-1">{{ event()!.photos[lightboxIndex()].caption }}</span>
-          }
-          <span class="text-white/25 text-xs tabular-nums ml-auto">
-            {{ lightboxIndex() + 1 }} / {{ event()!.photos.length }}
-          </span>
+        <!-- Fermer -->
+        <button class="lb-close" (click)="closeLightbox()">✕</button>
+
+        <!-- Précédent -->
+        <button class="lb-nav lb-prev" (click)="prevPhoto()">‹</button>
+
+        <!-- Image principale -->
+        <div class="lb-img-wrap">
+          <img
+            [src]="event()!.photos[lightboxIndex()].filePath"
+            [alt]="event()!.photos[lightboxIndex()].caption || ''"
+            class="lb-img">
         </div>
+
+        <!-- Suivant -->
+        <button class="lb-nav lb-next" (click)="nextPhoto()">›</button>
+
+        <!-- Footer -->
+        <div class="lb-footer">
+          <span class="lb-counter">{{ lightboxIndex() + 1 }} / {{ event()!.photos.length }}</span>
+          @if (event()!.photos[lightboxIndex()].caption) {
+            <span class="lb-caption">{{ event()!.photos[lightboxIndex()].caption }}</span>
+          }
+        </div>
+
       </div>
     </div>
   }

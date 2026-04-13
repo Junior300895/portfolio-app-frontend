@@ -202,20 +202,19 @@
 }
 
 /* ══════════════════════════════════════
-   LIGHTBOX
+   LIGHTBOX — même style que galerie privée
 ══════════════════════════════════════ */
-.ed-lb-backdrop {
-  position: fixed;
-  inset: 0;
-  top: 0;
-  z-index: 9999;
+.lb-backdrop {
+  position: fixed; inset: 0;
   background: #000;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: lb-in 0.2s ease;
   overflow: hidden;
   touch-action: none;
+  animation: lb-in 0.2s ease;
+  isolation: isolate;
 }
 
 @keyframes lb-in {
@@ -223,8 +222,7 @@
   to   { opacity: 1; }
 }
 
-/* Fond flouté style Apple Photos — img tag pour contourner CORS CSS */
-.ed-lb-bg-blur {
+.lb-bg-blur {
   position: absolute; inset: -40px;
   width: calc(100% + 80px);
   height: calc(100% + 80px);
@@ -235,90 +233,90 @@
   z-index: 0;
   pointer-events: none;
 }
-.ed-lb-bg-dim {
+.lb-bg-dim {
   position: absolute; inset: 0;
   background: rgba(0,0,0,0.55);
   z-index: 1;
 }
 
-.ed-lb-box {
+.lb-container {
   position: relative;
   width: 100%;
   height: 100%;
+  max-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2;
+  overflow: hidden;
 }
 
-.ed-lb-img {
-  position: relative;
-  z-index: 5;
-  max-width: calc(100vw - 7rem);
-  max-height: 100vh;
-  object-fit: contain;
-  display: block;
-  box-shadow: 0 8px 60px rgba(0,0,0,0.5);
-}
-
-.ed-lb-close {
+.lb-close {
   position: absolute;
-  top: 1.25rem;
-  right: 1.25rem;
-  background: rgba(0,0,0,0.4);
+  top: 1rem; right: 1rem;
+  background: rgba(0,0,0,0.55);
   border: none;
   color: white;
-  padding: 0.5rem;
+  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  width: 2.25rem;
-  height: 2.25rem;
+  z-index: 100;
+  transition: background 0.2s;
   backdrop-filter: blur(8px);
+  border-radius: 50%;
+  width: 2.5rem; height: 2.5rem;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(255,255,255,0.2);
 }
+.lb-close:hover { background: rgba(0,0,0,0.8); }
 
-.ed-lb-close:hover {
-  background: rgba(0,0,0,0.65);
-}
-
-.ed-lb-nav {
+.lb-nav {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 50%; transform: translateY(-50%);
   background: rgba(0,0,0,0.35);
   border: none;
-  color: rgba(255,255,255,0.9);
+  color: white;
+  font-size: 2.5rem;
   padding: 1rem 0.75rem;
   cursor: pointer;
-  transition: all 0.2s;
-  z-index: 10;
+  z-index: 100;
+  transition: background 0.2s;
+  line-height: 1;
+  backdrop-filter: blur(8px);
+}
+.lb-nav:hover { background: rgba(0,0,0,0.6); }
+.lb-prev { left: 0.5rem; }
+.lb-next { right: 0.5rem; }
+
+.lb-img-wrap {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(8px);
+  padding: 3rem 4.5rem;
+  box-sizing: border-box;
+}
+.lb-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  box-shadow: 0 8px 60px rgba(0,0,0,0.6);
 }
 
-.ed-lb-nav:hover {
-  background: rgba(0,0,0,0.6);
-  color: white;
-}
-
-.ed-lb-prev { left: 0.75rem; }
-.ed-lb-next { right: 0.75rem; }
-
-.ed-lb-footer {
+.lb-footer {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.75));
   padding: 2rem 1.5rem 0.75rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: linear-gradient(transparent, rgba(0,0,0,0.7));
   z-index: 10;
 }
+.lb-counter { color: rgba(255,255,255,0.4); font-size: 0.78rem; }
+.lb-caption { color: rgba(255,255,255,0.6); font-size: 0.82rem; flex: 1; }
