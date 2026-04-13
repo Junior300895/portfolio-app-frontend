@@ -207,12 +207,12 @@
 .ed-lb-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1000;
-  background: rgba(0,0,0,0.97);
+  top: 0;
+  z-index: 9999;
+  background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(12px);
   animation: lb-in 0.2s ease;
   overflow: hidden;
   touch-action: none;
@@ -223,6 +223,24 @@
   to   { opacity: 1; }
 }
 
+/* Fond flouté style Apple Photos — img tag pour contourner CORS CSS */
+.ed-lb-bg-blur {
+  position: absolute; inset: -40px;
+  width: calc(100% + 80px);
+  height: calc(100% + 80px);
+  object-fit: cover;
+  object-position: center;
+  filter: blur(40px) saturate(1.4) brightness(0.9);
+  transform: scale(1.05);
+  z-index: 0;
+  pointer-events: none;
+}
+.ed-lb-bg-dim {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 1;
+}
+
 .ed-lb-box {
   position: relative;
   width: 100%;
@@ -230,44 +248,50 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 2;
 }
 
 .ed-lb-img {
-  max-width: calc(100vw - 6rem);
-  max-height: calc(100vh - 8rem);
+  position: relative;
+  z-index: 5;
+  max-width: calc(100vw - 7rem);
+  max-height: 100vh;
   object-fit: contain;
   display: block;
-  box-shadow: 0 25px 80px rgba(0,0,0,0.8);
+  box-shadow: 0 8px 60px rgba(0,0,0,0.5);
 }
 
 .ed-lb-close {
   position: absolute;
   top: 1.25rem;
   right: 1.25rem;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.7);
-  padding: 0.6rem;
+  background: rgba(0,0,0,0.4);
+  border: none;
+  color: white;
+  padding: 0.5rem;
   cursor: pointer;
   transition: all 0.2s;
   z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
+  width: 2.25rem;
+  height: 2.25rem;
+  backdrop-filter: blur(8px);
 }
 
 .ed-lb-close:hover {
-  background: rgba(255,255,255,0.15);
-  color: white;
+  background: rgba(0,0,0,0.65);
 }
 
 .ed-lb-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: rgba(255,255,255,0.6);
+  background: rgba(0,0,0,0.35);
+  border: none;
+  color: rgba(255,255,255,0.9);
   padding: 1rem 0.75rem;
   cursor: pointer;
   transition: all 0.2s;
@@ -275,10 +299,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  backdrop-filter: blur(8px);
 }
 
 .ed-lb-nav:hover {
-  background: rgba(255,255,255,0.14);
+  background: rgba(0,0,0,0.6);
   color: white;
 }
 
@@ -290,9 +315,10 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 1rem 1.5rem;
+  padding: 2rem 1.5rem 0.75rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: linear-gradient(transparent, rgba(0,0,0,0.6));
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  z-index: 10;
 }

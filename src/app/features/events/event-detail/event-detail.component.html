@@ -162,6 +162,13 @@
            (click)="$event.stopPropagation()"
            (touchstart)="onTouchStart($event)"
            (touchend)="onTouchEnd($event)">
+
+        <!-- Fond flouté style Apple Photos -->
+        <div class="ed-lb-bg-blur"
+             [style.background-image]="'url(' + event()!.photos[lightboxIndex()].filePath + ')'">
+        </div>
+        <div class="ed-lb-bg-dim"></div>
+
         <button class="ed-lb-close" (click)="closeLightbox()">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
