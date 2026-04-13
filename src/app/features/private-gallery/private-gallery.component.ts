@@ -188,8 +188,9 @@ export class PrivateGalleryComponent implements OnInit {
         const mimeType = blob.type || 'image/jpeg';
         const file = new File([blob], filename, { type: mimeType });
 
-        // Web Share API — enregistre dans la galerie photo sur mobile
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        // Web Share API uniquement sur mobile (écran < 1024px)
+        const isMobile = window.innerWidth < 1024;
+        if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
           try {
             await navigator.share({
               files: [file],
@@ -197,12 +198,12 @@ export class PrivateGalleryComponent implements OnInit {
             });
             return;
           } catch (err: any) {
-            // Annulé par l'utilisateur
             if (err?.name === 'AbortError') return;
+            // Autre erreur → fallback téléchargement
           }
         }
 
-        // Fallback desktop : téléchargement classique
+        // Téléchargement classique (desktop ou fallback)
         const blobUrl = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = blobUrl;
