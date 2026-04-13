@@ -240,7 +240,7 @@
 /* ── Lightbox ── */
 .lb-backdrop {
   position: fixed; inset: 0;
-  background: rgba(0,0,0,0.95);
+  background: #000;
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -248,6 +248,22 @@
   overflow: hidden;
   touch-action: none;
 }
+
+/* Fond flouté style Apple Photos / Spotify */
+.lb-bg-blur {
+  position: absolute; inset: -20px;
+  background-size: cover;
+  background-position: center;
+  filter: blur(40px) saturate(1.4);
+  transform: scale(1.1);
+  z-index: 0;
+}
+.lb-bg-dim {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 1;
+}
+
 .lb-container {
   position: relative;
   width: 100%;
@@ -255,11 +271,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 2;
 }
 .lb-close {
   position: absolute;
   top: 1rem; right: 1rem;
-  background: rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.4);
   border: none;
   color: white;
   font-size: 1.25rem;
@@ -267,13 +284,17 @@
   cursor: pointer;
   z-index: 10;
   transition: background 0.2s;
+  backdrop-filter: blur(8px);
+  border-radius: 50%;
+  width: 2.25rem; height: 2.25rem;
+  display: flex; align-items: center; justify-content: center;
 }
-.lb-close:hover { background: rgba(255,255,255,0.2); }
+.lb-close:hover { background: rgba(0,0,0,0.65); }
 
 .lb-nav {
   position: absolute;
   top: 50%; transform: translateY(-50%);
-  background: rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.35);
   border: none;
   color: white;
   font-size: 2.5rem;
@@ -282,35 +303,40 @@
   z-index: 10;
   transition: background 0.2s;
   line-height: 1;
+  backdrop-filter: blur(8px);
 }
-.lb-nav:hover { background: rgba(255,255,255,0.18); }
+.lb-nav:hover { background: rgba(0,0,0,0.6); }
 .lb-prev { left: 0.5rem; }
 .lb-next { right: 0.5rem; }
 
 .lb-img-wrap {
-  max-width: calc(100vw - 8rem);
-  max-height: calc(100vh - 7rem);
+  position: relative;
+  z-index: 2;
+  max-width: 100vw;
+  max-height: calc(100vh - 5rem);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 4rem;
 }
 .lb-img {
   max-width: 100%;
-  max-height: calc(100vh - 7rem);
+  max-height: calc(100vh - 5rem);
   object-fit: contain;
   display: block;
+  box-shadow: 0 8px 60px rgba(0,0,0,0.6);
 }
 
 .lb-footer {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  background: rgba(0,0,0,0.7);
-  padding: 0.75rem 1.5rem;
+  background: linear-gradient(transparent, rgba(0,0,0,0.75));
+  padding: 2rem 1.5rem 0.75rem;
   display: flex;
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
-  backdrop-filter: blur(8px);
+  z-index: 10;
 }
 .lb-counter { color: rgba(255,255,255,0.4); font-size: 0.78rem; }
 .lb-caption { color: rgba(255,255,255,0.6); font-size: 0.82rem; flex: 1; }

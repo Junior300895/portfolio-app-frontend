@@ -151,6 +151,12 @@
          (touchstart)="onTouchStart($event)"
          (touchend)="onTouchEnd($event)">
 
+      <!-- Fond flouté style Apple Photos -->
+      <div class="lb-bg-blur"
+           [style.background-image]="'url(' + lightboxPhoto()!.filePath + ')'">
+      </div>
+      <div class="lb-bg-dim"></div>
+
       <!-- Fermer -->
       <button class="lb-close" (click)="closeLightbox()">✕</button>
 
