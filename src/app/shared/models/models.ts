@@ -14,7 +14,7 @@ export interface PagedResponse<T> {
 }
 
 export type EventCategory =
-  'MARIAGE' | 'ANNIVERSAIRE' | 'CONFERENCE' | 'SEMINAIRE' |
+  'MARIAGE' | 'BAPTEME' | 'HENNE' | 'ANNIVERSAIRE' | 'CONFERENCE' | 'SEMINAIRE' |
   'CONCERT' | 'CORPORATE' | 'FAMILLE' | 'AUTRE';
 
 export interface EventSummary {
@@ -76,6 +76,8 @@ export interface AuthResponse {
 
 export const CATEGORY_LABELS: Record<EventCategory, string> = {
   MARIAGE: 'Mariage',
+  BAPTEME: 'Baptême',
+  HENNE: 'Henné',
   ANNIVERSAIRE: 'Anniversaire',
   CONFERENCE: 'Conférence',
   SEMINAIRE: 'Séminaire',
@@ -117,6 +119,8 @@ export interface PrivateGalleryContent {
 
 export const CATEGORY_ICONS: Record<EventCategory, string> = {
   MARIAGE: '💍',
+  BAPTEME: '👶',
+  HENNE: '🌿',
   ANNIVERSAIRE: '🎂',
   CONFERENCE: '🎤',
   SEMINAIRE: '📋',
