@@ -54,10 +54,6 @@
         <button (click)="auth.logout(); menuOpen.set(false)" class="nav-link-mobile logout-mobile">
           Se déconnecter
         </button>
-      } @else {
-        <a routerLink="/admin/login" (click)="menuOpen.set(false)" class="nav-link-mobile amber">
-          🔑 Connexion admin
-        </a>
       }
     </div>
   }
