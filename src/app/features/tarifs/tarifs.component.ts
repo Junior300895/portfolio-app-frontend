@@ -136,6 +136,54 @@ export class TarifsComponent implements OnInit {
       notes: [
         'Un acompte de 50% est obligatoire pour la validation de la réservation.'
       ]
+    },
+    {
+      id: 'studio',
+      titre: 'Studio',
+      icone: '📸',
+      description: 'Séance photo en studio, dans un cadre maîtrisé avec éclairage professionnel.',
+      forfaits: [
+        {
+          numero: 1, photos: 5,
+          versions: [{ label: 'Version numérique', prix: 10000, icone: '💻' }]
+        },
+        {
+          numero: 2, photos: 8,
+          versions: [{ label: 'Version numérique', prix: 15000, icone: '💻' }],
+          populaire: true
+        },
+        {
+          numero: 3, photos: 10,
+          versions: [{ label: 'Version numérique', prix: 20000, icone: '💻' }]
+        }
+      ],
+      notes: [
+        'Un acompte de 50% est obligatoire pour la validation de la réservation.'
+      ]
+    },
+    {
+      id: 'exterieur',
+      titre: 'Extérieur',
+      icone: '🌳',
+      description: 'Séance photo en extérieur, sur le lieu de votre choix, en lumière naturelle.',
+      forfaits: [
+        {
+          numero: 1, photos: 5,
+          versions: [{ label: 'Version numérique', prix: 15000, icone: '💻' }]
+        },
+        {
+          numero: 2, photos: 10,
+          versions: [{ label: 'Version numérique', prix: 25000, icone: '💻' }],
+          populaire: true
+        },
+        {
+          numero: 3, photos: 15,
+          versions: [{ label: 'Version numérique', prix: 35000, icone: '💻' }]
+        }
+      ],
+      notes: [
+        'Un acompte de 50% est obligatoire pour la validation de la réservation.'
+      ]
     }
   ];
 
