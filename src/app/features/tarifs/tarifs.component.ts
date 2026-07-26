@@ -73,7 +73,7 @@ export class TarifsComponent implements OnInit {
         {
           numero: 4, photos: 120,
           versions: [
-            { label: 'Version numérique', prix: 115000, icone: '💻' },
+            { label: 'Version numérique', prix: 135000, icone: '💻' },
             { label: 'Album + Numérique', prix: 150000, icone: '📔' }
           ],
           galerieOfferte: true
