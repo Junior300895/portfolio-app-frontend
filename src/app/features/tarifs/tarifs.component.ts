@@ -51,21 +51,21 @@ export class TarifsComponent implements OnInit {
           numero: 1, photos: 60,
           versions: [
             { label: 'Version numérique', prix: 75000, icone: '💻' },
-            { label: 'Album + Numérique', prix: 85000, icone: '📔' }
+            { label: 'Album + Numérique', prix: 95000, icone: '📔' }
           ]
         },
         {
           numero: 2, photos: 80,
           versions: [
             { label: 'Version numérique', prix: 95000, icone: '💻' },
-            { label: 'Album + Numérique', prix: 110000, icone: '📔' }
+            { label: 'Album + Numérique', prix: 120000, icone: '📔' }
           ]
         },
         {
           numero: 3, photos: 100,
           versions: [
             { label: 'Version numérique', prix: 125000, icone: '💻' },
-            { label: 'Album + Numérique', prix: 145000, icone: '📔' }
+            { label: 'Album + Numérique', prix: 135000, icone: '📔' }
           ],
           populaire: true,
           galerieOfferte: true
@@ -74,7 +74,7 @@ export class TarifsComponent implements OnInit {
           numero: 4, photos: 120,
           versions: [
             { label: 'Version numérique', prix: 145000, icone: '💻' },
-            { label: 'Album + Numérique', prix: 150000, icone: '📔' }
+            { label: 'Album + Numérique', prix: 160000, icone: '📔' }
           ],
           galerieOfferte: true
         },
@@ -82,7 +82,7 @@ export class TarifsComponent implements OnInit {
           numero: 5, photos: 160,
           versions: [
             { label: 'Version numérique', prix: 190000, icone: '💻' },
-            { label: 'Album + Numérique', prix: 210000, icone: '📔' }
+            { label: 'Album + Numérique', prix: 220000, icone: '📔' }
           ],
           galerieOfferte: true
         },
@@ -90,7 +90,7 @@ export class TarifsComponent implements OnInit {
           numero: 6, photos: 180,
           versions: [
             { label: 'Version numérique', prix: 210000, icone: '💻' },
-            { label: 'Album + Numérique', prix: 230000, icone: '📔' }
+            { label: 'Album + Numérique', prix: 240000, icone: '📔' }
           ],
           galerieOfferte: true
         },
@@ -98,7 +98,7 @@ export class TarifsComponent implements OnInit {
           numero: 7, photos: 200,
           versions: [
             { label: 'Version numérique', prix: 230000, icone: '💻' },
-            { label: 'Album + Numérique', prix: 250000, icone: '📔' }
+            { label: 'Album + Numérique', prix: 260000, icone: '📔' }
           ],
           galerieOfferte: true
         }
