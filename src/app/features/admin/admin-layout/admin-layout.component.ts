@@ -32,6 +32,8 @@ export class AdminLayoutComponent implements OnInit {
     '/admin/evenements': 'Mes événements',
     '/admin/evenements/nouveau': 'Nouvel événement',
     '/admin/messages': 'Messages de contact',
+    '/admin/galeries-privees': 'Galeries privées',
+    '/admin/galerie-best-of': 'Galerie best-of',
   };
 
   ngOnInit() {

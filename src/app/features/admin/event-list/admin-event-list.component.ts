@@ -21,6 +21,7 @@ export class AdminEventListComponent implements OnInit {
   totalElements = signal(0);
   deleteTarget = signal<EventSummary | null>(null);
   deleting = signal(false);
+  deleteError = signal<string | null>(null);
 
   ngOnInit() { this.load(0); }
 
@@ -38,18 +39,29 @@ export class AdminEventListComponent implements OnInit {
     });
   }
 
-  confirmDelete(event: EventSummary) { this.deleteTarget.set(event); }
+  confirmDelete(event: EventSummary) {
+    this.deleteError.set(null);
+    this.deleteTarget.set(event);
+  }
 
   doDelete() {
     if (!this.deleteTarget()) return;
     this.deleting.set(true);
+    this.deleteError.set(null);
     this.adminEventService.delete(this.deleteTarget()!.id).subscribe({
       next: () => {
         this.deleteTarget.set(null);
         this.deleting.set(false);
         this.load(this.currentPage());
       },
-      error: () => this.deleting.set(false)
+      error: (err) => {
+        this.deleting.set(false);
+        // Message métier renvoyé par le backend (ex: galerie privée liée), sinon message générique.
+        this.deleteError.set(
+          err?.error?.message ??
+          "La suppression a échoué. Vérifiez votre connexion et réessayez."
+        );
+      }
     });
   }
 

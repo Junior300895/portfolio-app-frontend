@@ -125,12 +125,27 @@
             <p class="text-white/50 text-sm mb-6">
               "<strong class="text-white">{{ deleteTarget()!.title }}</strong>" et tous ses médias seront supprimés définitivement.
             </p>
+
+            @if (deleteError()) {
+              <div class="flex gap-3 items-start bg-amber-500/10 border border-amber-500/30 p-4 mb-6">
+                <svg class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <p class="text-amber-200/90 text-sm leading-relaxed">{{ deleteError() }}</p>
+              </div>
+            }
+
             <div class="flex gap-3 justify-end">
-              <button (click)="deleteTarget.set(null)" class="btn-ghost text-sm px-5 py-2">Annuler</button>
-              <button (click)="doDelete()" [disabled]="deleting()"
-                      class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white text-sm transition-colors disabled:opacity-50">
-                {{ deleting() ? 'Suppression...' : 'Supprimer' }}
+              <button (click)="deleteTarget.set(null)" class="btn-ghost text-sm px-5 py-2">
+                {{ deleteError() ? 'Fermer' : 'Annuler' }}
               </button>
+              @if (!deleteError()) {
+                <button (click)="doDelete()" [disabled]="deleting()"
+                        class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white text-sm transition-colors disabled:opacity-50">
+                  {{ deleting() ? 'Suppression...' : 'Supprimer' }}
+                </button>
+              }
             </div>
           </div>
         </div>

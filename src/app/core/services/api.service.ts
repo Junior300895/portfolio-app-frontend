@@ -46,9 +46,13 @@ export class EventService {
 export class GalleryService {
   private http = inject(HttpClient);
 
-  getBestPhotos(): Observable<Photo[]> {
-    return this.http.get<ApiResponse<Photo[]>>(`${environment.apiUrl}/gallery/best`)
-      .pipe(map(r => r.data));
+  getBestPhotos(bustCache = false): Observable<Photo[]> {
+    // bustCache : côté admin, on ajoute un paramètre unique pour toujours
+    // récupérer l'état frais (les modifications doivent être visibles aussitôt).
+    const url = bustCache
+      ? `${environment.apiUrl}/gallery/best?_=${Date.now()}`
+      : `${environment.apiUrl}/gallery/best`;
+    return this.http.get<ApiResponse<Photo[]>>(url).pipe(map(r => r.data));
   }
 }
 
@@ -128,6 +132,10 @@ export class AdminMediaService {
   toggleBest(id: number): Observable<Photo> {
     return this.http.put<ApiResponse<Photo>>(`${this.base}/photos/${id}/toggle-best`, {})
       .pipe(map(r => r.data));
+  }
+
+  deleteGalleryPhoto(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.base}/gallery/${id}`);
   }
 }
 

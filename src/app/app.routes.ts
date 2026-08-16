@@ -66,6 +66,10 @@ export const routes: Routes = [
       {
         path: 'galeries-privees',
         loadComponent: () => import('./features/admin/private-galleries/admin-private-galleries.component').then(m => m.AdminPrivateGalleriesComponent)
+      },
+      {
+        path: 'galerie-best-of',
+        loadComponent: () => import('./features/admin/gallery/admin-gallery.component').then(m => m.AdminGalleryComponent)
       }
     ]
   },
