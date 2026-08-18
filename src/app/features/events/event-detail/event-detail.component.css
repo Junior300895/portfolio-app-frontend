@@ -243,8 +243,9 @@
   transform: translate(-50%, -50%);
   z-index: 5;
   display: block;
-  max-width: calc(100% - 8rem);
-  max-height: 100%;
+  /* Marges réservées aux flèches (latérales), à la croix (haut) et au pied. */
+  max-width: min(calc(100% - 8rem), 1400px);
+  max-height: calc(100% - 6rem);
   width: auto;
   height: auto;
   object-fit: contain;
@@ -302,3 +303,12 @@
 }
 .ed-lb-counter { color: rgba(255,255,255,0.4); font-size: 0.78rem; }
 .ed-lb-caption { color: rgba(255,255,255,0.6); font-size: 0.82rem; flex: 1; }
+
+/* Mobile : les flèches sont plus étroites, on rend la largeur à l'image. */
+@media (max-width: 640px) {
+  .ed-lb-img {
+    max-width: calc(100% - 3.5rem);
+    max-height: calc(100% - 5rem);
+  }
+  .ed-lb-prev, .ed-lb-next { font-size: 2rem; padding: 0.75rem 0.4rem; }
+}

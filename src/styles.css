@@ -96,7 +96,10 @@
   }
 
   /* Page transitions */
-  .page-enter { animation: fadeSlideUp 0.5s ease forwards; }
+  /* Pas de `forwards` : conserver le transform final ferait de .page-enter le bloc
+     conteneur des descendants position:fixed (lightbox), qui serait alors
+     dimensionné sur la hauteur du document au lieu de la fenêtre. */
+  .page-enter { animation: fadeSlideUp 0.5s ease; }
 
   @keyframes fadeSlideUp {
     from { opacity: 0; transform: translateY(20px); }
