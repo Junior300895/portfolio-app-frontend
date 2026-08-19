@@ -240,6 +240,11 @@
 /* ── Lightbox ── */
 .lb-backdrop {
   position: fixed; inset: 0;
+  /* 100dvh suit la barre d'URL mobile ; sans ça le pied du lightbox (et donc
+     le bouton Télécharger) se retrouve derrière la barre d'outils du navigateur
+     tant qu'elle est déployée. 100vh sert de repli aux navigateurs anciens. */
+  height: 100vh;
+  height: 100dvh;
   background: #000;
   z-index: 1000;
   display: flex;
@@ -272,6 +277,11 @@
   align-items: center;
   justify-content: center;
   z-index: 2;
+  /* Empêche le conteneur de dépasser la fenêtre à cause de la taille intrinsèque
+     de l'image (min-width:auto sur un flex item), ce qui décalerait le footer
+     — et donc le bouton Télécharger — hors de l'écran. */
+  min-width: 0;
+  max-width: 100vw;
 }
 .lb-close {
   position: absolute;
@@ -312,8 +322,10 @@
 .lb-img-wrap {
   position: relative;
   z-index: 2;
+  min-width: 0;
   max-width: 100vw;
   max-height: calc(100vh - 5rem);
+  max-height: calc(100dvh - 5rem);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -322,6 +334,7 @@
 .lb-img {
   max-width: 100%;
   max-height: calc(100vh - 5rem);
+  max-height: calc(100dvh - 5rem);
   object-fit: contain;
   display: block;
   box-shadow: 0 8px 60px rgba(0,0,0,0.6);
@@ -339,8 +352,13 @@
   z-index: 10;
 }
 .lb-counter { color: rgba(255,255,255,0.4); font-size: 0.78rem; }
-.lb-caption { color: rgba(255,255,255,0.6); font-size: 0.82rem; flex: 1; }
-.lb-footer-actions { display: flex; gap: 0.5rem; margin-left: auto; }
+.lb-caption {
+  color: rgba(255,255,255,0.6); font-size: 0.82rem; flex: 1;
+  /* min-width:0 : sans ça, un flex item ne peut pas rétrécir sous sa taille
+     de contenu et pousse les boutons hors de l'écran. */
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.lb-footer-actions { display: flex; gap: 0.5rem; margin-left: auto; flex-wrap: wrap; }
 
 .lb-fav-btn, .lb-dl-btn {
   background: rgba(255,255,255,0.08);
@@ -354,3 +372,37 @@
 .lb-fav-btn:hover  { border-color: #f87171; color: #f87171; }
 .lb-dl-btn:hover   { border-color: #f59e0b; color: #f59e0b; }
 .lb-fav-active     { border-color: #f87171 !important; color: #f87171 !important; }
+
+/* ── Lightbox sur petits écrans ──────────────────────────────
+   Sans ces règles, « Ajouter aux favoris » + « Télécharger » ne tiennent pas
+   sur une seule ligne : le dernier bouton (Télécharger) sortait de l'écran et
+   était rogné par l'overflow:hidden du backdrop. */
+@media (max-width: 640px) {
+  .lb-footer {
+    /* env(safe-area-inset-bottom) : dégage la barre gestuelle iOS/Android. */
+    padding: 1.5rem 0.75rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    gap: 0.5rem;
+  }
+  .lb-counter { width: 100%; }
+  .lb-caption { width: 100%; flex: none; white-space: normal; }
+  .lb-footer-actions {
+    margin-left: 0;
+    width: 100%;
+    flex-wrap: nowrap;
+  }
+  .lb-fav-btn, .lb-dl-btn {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    padding: 0.55rem 0.4rem;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /* Flèches plus compactes pour rendre de la largeur à l'image */
+  .lb-img-wrap { padding: 0 2.5rem; }
+  .lb-nav { font-size: 2rem; padding: 0.75rem 0.35rem; }
+  .lb-prev { left: 0.15rem; }
+  .lb-next { right: 0.15rem; }
+}
