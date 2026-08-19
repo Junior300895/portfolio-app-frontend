@@ -285,26 +285,33 @@
 }
 .lb-close {
   position: absolute;
-  top: 1rem; right: 1rem;
-  background: rgba(0,0,0,0.4);
-  border: none;
-  color: white;
-  font-size: 1.25rem;
-  padding: 0.4rem 0.7rem;
+  /* env(...) : dégage l'encoche / la barre d'état quand le viewport la couvre. */
+  top: calc(0.75rem + env(safe-area-inset-top, 0px));
+  right: calc(0.75rem + env(safe-area-inset-right, 0px));
+  /* Fond opaque et bordure visible : pas de backdrop-filter ici — sur Safari iOS
+     un élément à backdrop-filter voisin d'un élément filtré (le fond flouté)
+     peut être rendu totalement transparent, faisant disparaître le bouton. */
+  background: rgba(0,0,0,0.72);
+  border: 1px solid rgba(255,255,255,0.28);
+  color: #fff;
+  font-size: 1.15rem;
+  line-height: 1;
   cursor: pointer;
-  z-index: 10;
+  /* Au-dessus du footer (z-index 10) pour rester atteignable en toute situation. */
+  z-index: 30;
   transition: background 0.2s;
-  backdrop-filter: blur(8px);
   border-radius: 50%;
-  width: 2.25rem; height: 2.25rem;
+  /* Cible tactile ≥ 44px (recommandation Apple). */
+  width: 2.75rem; height: 2.75rem;
   display: flex; align-items: center; justify-content: center;
 }
-.lb-close:hover { background: rgba(0,0,0,0.65); }
+.lb-close:hover { background: rgba(0,0,0,0.9); }
 
 .lb-nav {
   position: absolute;
   top: 50%; transform: translateY(-50%);
-  background: rgba(0,0,0,0.35);
+  /* Voir .lb-close : pas de backdrop-filter (rendu instable sur Safari iOS). */
+  background: rgba(0,0,0,0.55);
   border: none;
   color: white;
   font-size: 2.5rem;
@@ -313,9 +320,8 @@
   z-index: 10;
   transition: background 0.2s;
   line-height: 1;
-  backdrop-filter: blur(8px);
 }
-.lb-nav:hover { background: rgba(0,0,0,0.6); }
+.lb-nav:hover { background: rgba(0,0,0,0.75); }
 .lb-prev { left: 0.5rem; }
 .lb-next { right: 0.5rem; }
 

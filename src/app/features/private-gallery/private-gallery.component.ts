@@ -103,10 +103,22 @@ export class PrivateGalleryComponent implements OnInit {
   openLightbox(index: number) {
     this.lightboxIndex.set(index);
     this.lightboxOpen.set(true);
+    this.setBodyScrollLock(true);
   }
 
   closeLightbox() {
     this.lightboxOpen.set(false);
+    this.setBodyScrollLock(false);
+  }
+
+  /**
+   * Bloque le défilement de la page sous le lightbox. Sur Safari iOS, laisser la
+   * page défiler derrière fait rétracter/déployer la barre d'URL, ce qui décale
+   * le calque `fixed` et peut masquer les boutons (fermer, télécharger).
+   */
+  private setBodyScrollLock(locked: boolean) {
+    if (!isPlatformBrowser(this.platformId)) return;
+    document.body.style.overflow = locked ? 'hidden' : '';
   }
 
   prevPhoto() {
